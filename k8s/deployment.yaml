@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interviewmaster-app
+  labels:
+    app: interviewmaster
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: interviewmaster
+  template:
+    metadata:
+      labels:
+        app: interviewmaster
+    spec:
+      containers:
+        - name: interviewmaster
+          image: <YOUR_IMAGE_NAME>:<TAG>
+          ports:
+            - containerPort: 3000
+          env:
+            # Add any environment variables here
+            - name: NODE_ENV
+              value: "development"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi" 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Head -->
+  <g id="robot-head">
+    <!-- Head Base -->
+    <rect x="120" y="80" width="160" height="140" rx="20" fill="#2c3e50" stroke="#34495e" stroke-width="4"/>
+    
+    <!-- Antenna -->
+    <path d="M200,80 L200,40 M190,40 L210,40" stroke="#34495e" stroke-width="4" fill="none"/>
+    <circle cx="200" cy="35" r="5" fill="#e74c3c"/>
+    
+    <!-- Eyes -->
+    <g id="eyes">
+      <rect x="150" y="120" width="40" height="20" rx="5" fill="#4ae3f0"/>
+      <rect x="210" y="120" width="40" height="20" rx="5" fill="#4ae3f0"/>
+    </g>
+    
+    <!-- Mouth -->
+    <rect x="170" y="160" width="60" height="10" rx="5" fill="#4ae3f0"/>
+    
+    <!-- Decorative Lines -->
+    <path d="M120,100 L280,100 M120,200 L280,200" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <!-- Body -->
+  <g id="robot-body">
+    <!-- Neck -->
+    <rect x="180" y="220" width="40" height="20" fill="#34495e"/>
+    
+    <!-- Torso -->
+    <path d="M140,240 L260,240 L280,360 L120,360 Z" fill="#2c3e50" stroke="#34495e" stroke-width="4"/>
+    
+    <!-- Chest Light -->
+    <circle cx="200" cy="280" r="20" fill="#4ae3f0"/>
+    
+    <!-- Panel Lines -->
+    <path d="M160,280 L240,280 M200,260 L200,300" stroke="#34495e" stroke-width="2"/>
+  </g>
+</svg>
