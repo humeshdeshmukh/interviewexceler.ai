@@ -70,7 +70,7 @@ export async function POST(req: Request) {
         <p><strong>Package:</strong> ${data.packageId}</p>
         <br/>
         <p>We'll be in touch shortly with additional information and next steps.</p>
-        <p>Best regards,<br/>InterviewPrep.ai Team</p>
+        <p>Best regards,<br/>InterviewExceler.Ai Team</p>
       `;
 
       // Send email to admin

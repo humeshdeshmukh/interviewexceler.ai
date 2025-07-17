@@ -138,7 +138,7 @@ export function Footer() {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.7 }}
                             >
-                                {year} InterviewPrep.ai. All rights reserved.
+                                {year} InterviewExceler.Ai. All rights reserved.
                             </motion.p>
                         </div>
                     </motion.div>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "InterviewPrep.ai - Disclosures",
+  title: "InterviewExceler.Ai - Disclosures",
   description: "Important disclosures about our AI interview coaching platform, data usage, and privacy practices."
 }
 
@@ -19,7 +19,7 @@ export default function Disclosures() {
                         <h2 className="text-2xl font-semibold mb-6 text-[#fcba28]">AI Interview Coaching Disclosure</h2>
                         <div className="space-y-4 text-gray-300">
                             <p>
-                                InterviewPrep.ai uses advanced artificial intelligence to provide interview coaching and feedback.
+                                InterviewExceler.Ai uses advanced artificial intelligence to provide interview coaching and feedback.
                                 While our AI technology is designed to provide helpful guidance, please note:
                             </p>
                             <ul className="list-disc list-inside space-y-2 pl-4">

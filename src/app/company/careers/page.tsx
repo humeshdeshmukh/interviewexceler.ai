@@ -132,7 +132,7 @@ const JobCard = ({ job }: { job: typeof jobPostings[0] }) => {
             </div>
             <div className="pt-4">
               <a
-                href={`mailto:careers@InterviewPrep.ai?subject=Application for ${job.title} - ${job.id}`}
+                href={`mailto:careers@InterviewExceler.Ai?subject=Application for ${job.title} - ${job.id}`}
                 className="inline-block px-6 py-3 bg-[#fcba28] text-black rounded-lg font-semibold hover:bg-[#fcba28]/90 transition-colors"
               >
                 Apply Now
@@ -264,10 +264,10 @@ export default function Careers() {
             <p className="text-lg text-white/60 mb-8">
               We're always looking for talented individuals. Send your resume to{" "}
               <a
-                href="mailto:careers@InterviewPrep.ai"
+                href="mailto:careers@InterviewExceler.Ai"
                 className="text-[#fcba28] hover:underline"
               >
-                careers@InterviewPrep.ai
+                careers@InterviewExceler.Ai
               </a>
             </p>
           </motion.div>

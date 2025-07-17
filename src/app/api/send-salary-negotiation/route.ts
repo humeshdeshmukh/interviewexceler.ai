@@ -99,7 +99,7 @@ export async function POST(req: Request) {
           
           <p>We aim to help you maximize your compensation package through effective negotiation strategies. If you need to provide additional information or have any questions, please don't hesitate to contact us.</p>
           
-          <p style="margin-top: 20px;">Best regards,<br>The InterviewPrep.ai Team</p>
+          <p style="margin-top: 20px;">Best regards,<br>The InterviewExceler.Ai Team</p>
         </div>
       `;
 
@@ -116,7 +116,7 @@ export async function POST(req: Request) {
         transporter.sendMail({
           from: process.env.ADMIN_EMAIL,
           to: data.email,
-          subject: 'Your Salary Negotiation Request - InterviewPrep.ai',
+          subject: 'Your Salary Negotiation Request - InterviewExceler.Ai',
           html: clientHtml,
         })
       ]);

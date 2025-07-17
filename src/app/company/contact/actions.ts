@@ -12,7 +12,7 @@ export async function submitContactForm(data: ContactFormData) {
 
     // In production, you would send this to your email service
     // Example: await sendEmail({
-    //   to: "support@InterviewPrep.ai",
+    //   to: "support@InterviewExceler.Ai",
     //   from: validatedData.email,
     //   subject: validatedData.subject,
     //   text: `Name: ${validatedData.name}\nEmail: ${validatedData.email}\nMessage: ${validatedData.message}`,

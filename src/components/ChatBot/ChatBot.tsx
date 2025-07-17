@@ -15,7 +15,7 @@ interface Message {
 const ChatBotIcon = () => (
   <Image
     src="/logo.svg"
-    alt="InterviewPrep.ai Chat"
+    alt="InterviewExceler.Ai Chat"
     width={40}
     height={40}
     className={styles.chatbotIcon}
@@ -40,7 +40,7 @@ export const ChatBot: React.FC = () => {
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
-        content: "👋 Welcome to InterviewPrep.ai! I'm your personal interview preparation assistant. I can help you with:\n\n• Mock interviews and feedback\n• Technical interview preparation\n• Resume reviews\n• Career guidance\n• Interview strategies\n\nHow can I assist you today?",
+        content: "👋 Welcome to InterviewExceler.Ai! I'm your personal interview preparation assistant. I can help you with:\n\n• Mock interviews and feedback\n• Technical interview preparation\n• Resume reviews\n• Career guidance\n• Interview strategies\n\nHow can I assist you today?",
         isBot: true,
         timestamp: new Date(),
       };
@@ -97,7 +97,7 @@ export const ChatBot: React.FC = () => {
               <div className={styles.headerContent}>
                 <ChatBotIcon />
                 <div className={styles.headerText}>
-                  <h3>InterviewMaster AI</h3>
+                  <h3>InterviewExceler.Ai.Ai</h3>
                   <span className={styles.onlineStatus}>Ready to help</span>
                 </div>
               </div>

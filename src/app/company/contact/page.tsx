@@ -57,8 +57,8 @@ const ContactInfo = () => {
     {
       icon: Mail,
       title: "Email",
-      value: "support@InterviewPrep.ai",
-      href: "mailto:support@InterviewPrep.ai",
+      value: "support@InterviewExceler.Ai",
+      href: "mailto:support@InterviewExceler.Ai",
     },
     {
       icon: MapPin,
@@ -74,7 +74,7 @@ const ContactInfo = () => {
     {
       icon: MessageSquare,
       title: "Social",
-      value: "@InterviewPrep.ai",
+      value: "@InterviewExceler.Ai",
       href: "https://twitter.com/interviewmaster",
     },
   ];
@@ -258,7 +258,7 @@ export default function Contact() {
               Get in Touch
             </h1>
             <p className="text-lg text-white/60 max-w-3xl mx-auto mb-12">
-              Have questions about InterviewPrep.ai? We're here to help. Reach out to our team
+              Have questions about InterviewExceler.Ai? We're here to help. Reach out to our team
               and we'll get back to you as soon as possible.
             </p>
           </motion.div>

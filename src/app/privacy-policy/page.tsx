@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "InterviewPrep.ai - Privacy Policy",
+  title: "InterviewExceler.Ai - Privacy Policy",
   description: "Our commitment to protecting your privacy while using our AI interview coaching platform."
 }
 
@@ -20,10 +20,10 @@ export default function PrivacyPolicy() {
             <p className="mb-4"><strong>Last Updated:</strong> January 13, 2025</p>
             
             <p className="mb-4">
-              Welcome to <strong>InterviewPrep.ai</strong> (&quot;we,&quot; &quot;our,&quot; &quot;us&quot;). This Privacy Policy explains how we collect, use, and protect your personal information when you use our AI-powered interview coaching platform.
+              Welcome to <strong>InterviewExceler.Ai</strong> (&quot;we,&quot; &quot;our,&quot; &quot;us&quot;). This Privacy Policy explains how we collect, use, and protect your personal information when you use our AI-powered interview coaching platform.
             </p>
             <p className="mb-4">
-              By using InterviewPrep.ai, you agree to the terms of this Privacy Policy. We take your privacy seriously and are committed to protecting your personal information.
+              By using InterviewExceler.Ai, you agree to the terms of this Privacy Policy. We take your privacy seriously and are committed to protecting your personal information.
             </p>
           </section>
 

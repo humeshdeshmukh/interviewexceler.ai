@@ -9,7 +9,7 @@ import { Metadata } from "next";
 // Replace the icons or favicons with yours
 
 export function generateMetadata({
-  title = "InterviewPrep.ai",
+  title = "InterviewExceler.Ai",
   description = " ",
   image = "/thumbnail.png",
   noIndex = false,

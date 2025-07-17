@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { AnimationProps, motion } from "framer-motion";
 import { Laptop, Code, Github } from 'lucide-react';
 
-// Icons related to the interview process, technology stack, and the purpose of InterviewPrep.ai
+// Icons related to the interview process, technology stack, and the purpose of InterviewExceler.Ai
 import { BsFillPersonCheckFill } from "react-icons/bs";
 import { FaLaptopCode, FaQuestionCircle } from "react-icons/fa";
 import { SiReact, SiGithub } from "react-icons/si";

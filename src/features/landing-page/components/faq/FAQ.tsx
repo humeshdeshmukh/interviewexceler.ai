@@ -69,7 +69,7 @@ const FAQItem = ({ question, answer, icon, isOpen, onToggle }: FAQItemProps) => 
 
 const faqData = [
     {
-        question: "How does InterviewPrep.ai's AI interview simulation work?",
+        question: "How does InterviewExceler.Ai's AI interview simulation work?",
         answer: "Our AI-powered interview simulator uses advanced natural language processing to conduct realistic interview scenarios. It adapts to your responses in real-time, providing personalized feedback on your communication style, technical accuracy, and problem-solving approach. The system also analyzes your body language and tone through video interviews, offering comprehensive feedback to improve your interview performance.",
         icon: <Brain className="h-5 w-5" />,
     },
@@ -84,8 +84,8 @@ const faqData = [
         icon: <Zap className="h-5 w-5" />,
     },
     {
-        question: "What makes InterviewPrep.ai different from other platforms?",
-        answer: "InterviewPrep.ai stands out with its advanced AI technology that provides personalized interview experiences. Unlike traditional platforms, we offer dynamic question adaptation, real-time feedback, and comprehensive performance analytics. Our platform also includes industry-specific interview preparation, mock interviews with AI-powered interviewers, and a vast library of company-specific interview questions.",
+        question: "What makes InterviewExceler.Ai different from other platforms?",
+        answer: "InterviewExceler.Ai stands out with its advanced AI technology that provides personalized interview experiences. Unlike traditional platforms, we offer dynamic question adaptation, real-time feedback, and comprehensive performance analytics. Our platform also includes industry-specific interview preparation, mock interviews with AI-powered interviewers, and a vast library of company-specific interview questions.",
         icon: <Award className="h-5 w-5" />,
     },
     {
@@ -118,7 +118,7 @@ export const FAQ = () => {
                     <ChipBanner text="FAQ" />
                     <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold text-center">
                         Common Questions About{" "}
-                        <span className="text-[#fcba28]">InterviewPrep.ai</span>
+                        <span className="text-[#fcba28]">InterviewExceler.Ai</span>
                     </h2>
                     <p className="mt-4 text-lg text-foreground/80 max-w-2xl mx-auto text-center">
                         Get answers to frequently asked questions about our AI-powered interview preparation platform

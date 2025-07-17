@@ -25,8 +25,8 @@ export const faqCategories: FAQCategory[] = [
     faqs: [
       {
         id: 'what-is',
-        question: 'What is InterviewPrep.ai?',
-        answer: 'InterviewPrep.ai is an advanced AI-powered platform designed to help you prepare for technical interviews. We provide personalized practice sessions, real-time feedback, and comprehensive learning resources tailored to your specific needs and target roles.',
+        question: 'What is InterviewExceler.Ai?',
+        answer: 'InterviewExceler.Ai is an advanced AI-powered platform designed to help you prepare for technical interviews. We provide personalized practice sessions, real-time feedback, and comprehensive learning resources tailored to your specific needs and target roles.',
         relatedLinks: [
           { text: 'View Features', url: '/features' },
           { text: 'Get Started', url: '/signup' }

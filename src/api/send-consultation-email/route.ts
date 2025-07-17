@@ -48,14 +48,14 @@ export async function POST(req: Request) {
         </div>
 
         <div style="font-size: 12px; color: #666; margin-top: 30px; text-align: center;">
-          <p>This is an automated message from InterviewPrep.ai</p>
+          <p>This is an automated message from InterviewExceler.Ai</p>
         </div>
       </div>
     `;
 
     await transporter.sendMail({
       from: {
-        name: 'InterviewPrep.ai',
+        name: 'InterviewExceler.Ai',
         address: process.env.EMAIL_USER as string
       },
       to,

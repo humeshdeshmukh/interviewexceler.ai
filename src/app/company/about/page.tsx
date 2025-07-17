@@ -72,7 +72,7 @@ export default function About() {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              About InterviewPrep.ai
+              About InterviewExceler.Ai
             </h1>
             <p className="text-lg text-white/60 max-w-3xl mx-auto mb-12">
               {companyDescription.about}

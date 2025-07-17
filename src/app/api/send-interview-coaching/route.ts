@@ -97,7 +97,7 @@ export async function POST(req: Request) {
           
           <p>We aim to provide the most effective interview coaching experience. If you need to modify your schedule or have any questions, please don't hesitate to contact us.</p>
           
-          <p style="margin-top: 20px;">Best regards,<br>The InterviewPrep.ai Team</p>
+          <p style="margin-top: 20px;">Best regards,<br>The InterviewExceler.Ai Team</p>
         </div>
       `;
 
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
         transporter.sendMail({
           from: process.env.ADMIN_EMAIL,
           to: data.email,
-          subject: 'Your Interview Coaching Request - InterviewPrep.ai',
+          subject: 'Your Interview Coaching Request - InterviewExceler.Ai',
           html: clientHtml,
         })
       ]);

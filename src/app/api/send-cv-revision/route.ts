@@ -98,7 +98,7 @@ export async function POST(req: Request) {
           
           <p>We aim to deliver high-quality results within our promised timeframe. If you need to provide any additional information or have questions, please don't hesitate to contact us.</p>
           
-          <p style="margin-top: 20px;">Best regards,<br>The InterviewPrep.ai Team</p>
+          <p style="margin-top: 20px;">Best regards,<br>The InterviewExceler.Ai Team</p>
         </div>
       `;
 
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         transporter.sendMail({
           from: process.env.ADMIN_EMAIL,
           to: data.email,
-          subject: 'Your CV Revision Request - InterviewPrep.ai',
+          subject: 'Your CV Revision Request - InterviewExceler.Ai',
           html: clientHtml,
         })
       ]);

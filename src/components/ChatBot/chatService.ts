@@ -7,7 +7,7 @@ export async function generateChatResponse(message: string): Promise<string> {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
     
     // Add context to make responses more relevant to your application
-    const prompt = `As an AI assistant for InterviewPrep.ai, help the user with their question: ${message}
+    const prompt = `As an AI assistant for InterviewExceler.Ai, help the user with their question: ${message}
     Focus on providing helpful responses related to interview preparation, aptitude tests, and career guidance.`;
     
     const result = await model.generateContent(prompt);

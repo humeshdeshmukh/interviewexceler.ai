@@ -125,7 +125,7 @@ export async function POST(req: Request) {
         
         <p>If you need to reschedule or have any questions, please contact us immediately.</p>
         
-        <p>Best regards,<br/>InterviewPrep.ai Team</p>
+        <p>Best regards,<br/>InterviewExceler.Ai Team</p>
       `;
 
       // Send email to admin
