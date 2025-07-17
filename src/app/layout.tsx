@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthModal } from "@/features/auth/components/AuthModal"; 
 import { AuthProvider } from '@/features/auth/context/AuthContext'; 
 import { ChatBot } from "@/components/ChatBot/ChatBot";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
