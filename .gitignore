@@ -31,6 +31,8 @@
 .vercel
 
 # typescript
+.env
+
 
 
 
