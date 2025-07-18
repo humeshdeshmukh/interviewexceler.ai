@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { Analytics } from "@vercel/analytics/react"
 import { cn } from "@/lib/utils";
 import { Noto_Sans } from 'next/font/google';
 import { generateMetadata } from "@/lib/generateMetadata";
@@ -15,6 +14,7 @@ import { AuthModal } from "@/features/auth/components/AuthModal";
 import { AuthProvider } from '@/features/auth/context/AuthContext'; 
 import { ChatBot } from "@/components/ChatBot/ChatBot";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
