@@ -68,7 +68,7 @@ export function generateMetadata({
       },
       {
         rel: 'apple-touch-icon',
-        url: '/apple-touch-icon.png',
+        url: '/favicon.ico',
       },
     ],
     metadataBase: new URL(baseUrl),
