@@ -1,15 +1,16 @@
 import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { cn } from "@/lib/utils";
 import { Noto_Sans } from 'next/font/google';
 import { generateMetadata } from "@/lib/generateMetadata";
 import NextTopLoader from 'nextjs-toploader';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Toaster } from "@/components/ui/toaster"; 
-import { AuthModal } from "@/features/auth/components/AuthModal"; 
-import { AuthProvider } from '@/features/auth/context/AuthContext'; 
+import { Toaster } from "@/components/ui/toaster";
+import { AuthModal } from "@/features/auth/components/AuthModal";
+import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { ChatBot } from "@/components/ChatBot/ChatBot";
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
@@ -28,7 +29,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          font.className, 
+          font.className,
           "min-h-screen bg-background antialiased"
         )}
         suppressHydrationWarning
@@ -43,6 +44,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <Analytics />
+          <SpeedInsights />
         </AuthProvider>
       </body>
     </html>
