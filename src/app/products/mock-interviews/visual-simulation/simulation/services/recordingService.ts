@@ -7,9 +7,14 @@ class RecordingService {
     if (typeof window === 'undefined') return null;
     if (this.RecordRTCModule) return this.RecordRTCModule;
 
-    const { RecordRTCPromisesHandler } = await import('recordrtc');
-    this.RecordRTCModule = RecordRTCPromisesHandler;
-    return RecordRTCPromisesHandler;
+    try {
+      const RecordRTCModule = await import('recordrtc');
+      this.RecordRTCModule = RecordRTCModule.RecordRTCPromisesHandler;
+      return RecordRTCModule.RecordRTCPromisesHandler;
+    } catch (error) {
+      console.error('Failed to load RecordRTC:', error);
+      throw new Error('Failed to load RecordRTC');
+    }
   }
 
   async startRecording(): Promise<void> {
