@@ -9,8 +9,8 @@ import { Metadata } from "next";
 // Replace the icons or favicons with yours
 
 export function generateMetadata({
-  title = "InterviewExceler.Ai",
-  description = " ",
+  title = "InterviewExceler.Ai - Master Your Interview Skills",
+  description = "Elevate your career with InterviewExceler.Ai. Practice with AI-driven mock interviews, get personalized feedback, and land your dream job.",
   image = "/thumbnail.png",
   noIndex = false,
 }: {
@@ -20,15 +20,17 @@ export function generateMetadata({
   icons?: string
   noIndex?: boolean
 } = {}): Metadata {
-  const fullImageUrl = new URL(image, 'https://www.devvault.dev').toString()
+  const baseUrl = 'https://www.interviewexceler.com';
+  const fullImageUrl = image.startsWith('http') ? image : new URL(image, baseUrl).toString();
+
   return {
     title,
     description,
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: 'https://www.devvault.dev',
-      siteName: 'DevVault',
+      url: baseUrl,
+      siteName: 'InterviewExceler.Ai',
       title,
       description,
       images: [
@@ -36,7 +38,7 @@ export function generateMetadata({
           url: fullImageUrl,
           width: 1200,
           height: 630,
-          alt: 'DevVault',
+          alt: 'InterviewExceler.Ai',
         },
       ],
     },
@@ -44,34 +46,32 @@ export function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [image],
-      creator: "@lonz_chris",
-      site: "@0dev_vault"
+      images: [fullImageUrl],
+      creator: "@interviewexceler",
+      site: "@interviewexceler"
     },
     icons: [
       {
         rel: 'icon',
         type: 'image/png',
-        media: '(prefers-color-scheme: light)',
-        url: '/seo/favicon.ico',
-      },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        media: '(prefers-color-scheme: dark)',
-        url: '/seo/favicon.ico',
+        url: '/favicon.ico',
       },
       {
         rel: 'apple-touch-icon',
-        url: '/seo/apple-touch-icon.png',
+        url: '/apple-touch-icon.png',
       },
     ],
-    metadataBase: new URL('https://www.devvault.dev'),
-    ...(noIndex && {
-      robots: {
-        index: false,
-        follow: false
-      }
-    })
+    metadataBase: new URL(baseUrl),
+    robots: {
+      index: !noIndex,
+      follow: !noIndex,
+      googleBot: {
+        index: !noIndex,
+        follow: !noIndex,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   }
 }
