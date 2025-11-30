@@ -1,148 +1,212 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { MaxWidthWrapper } from "@/components/MaxWidthWrapper";
-import {
-  companyStats,
-  companyValues,
-  companyMilestones,
-  teamMembers,
-  companyDescription,
-} from "./data/company";
-
-const BackgroundGradient = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-
-  return (
-    <motion.div ref={ref} style={{ opacity }} className="absolute inset-0 overflow-hidden">
-      <motion.div
-        animate={{
-          backgroundPosition: ["0% 0%", "100% 100%"],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,#fcba2810_0%,transparent_65%)] blur-3xl"
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,#fcba2815_0%,transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,#fcba2815_0%,transparent_50%)]" />
-    </motion.div>
-  );
-};
-
-const GridPattern = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-
-  return (
-    <motion.div ref={ref} style={{ y }} className="absolute inset-0">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_-30%,#fcba2815,transparent)]" />
-    </motion.div>
-  );
-};
+import { Brain, Target, Users, Sparkles, Zap, TrendingUp, Award, Rocket } from "lucide-react";
 
 export default function About() {
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      <BackgroundGradient />
-      <GridPattern />
+    <div className="relative min-h-screen bg-gradient-to-b from-background to-background/95 overflow-hidden">
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0" />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16">
+      <section className="relative pt-32 pb-20 z-10">
         <MaxWidthWrapper>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              About InterviewExceler.Ai
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#fcba28]/10 border border-[#fcba28]/20 rounded-full mb-6"
+            >
+              <Sparkles className="w-4 h-4 text-[#fcba28]" />
+              <span className="text-sm font-medium text-[#fcba28]">AI-Powered Interview Excellence</span>
+            </motion.div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+              About InterviewExceler.AI
             </h1>
-            <p className="text-lg text-white/60 max-w-3xl mx-auto mb-12">
-              {companyDescription.about}
+            <p className="text-xl text-white/60 leading-relaxed">
+              Empowering job seekers worldwide with cutting-edge AI technology to master interviews, build confidence, and land their dream careers.
             </p>
           </motion.div>
         </MaxWidthWrapper>
       </section>
 
-      {/* Stats Section
-      <section className="relative py-16">
+      {/* Team Section */}
+      <section className="relative py-16 z-10">
         <MaxWidthWrapper>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {companyStats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-lg p-6 text-center transition-colors"
-                >
-                  <div className="flex justify-center text-[#fcba28] mb-2">
-                    <Icon className="w-6 h-6" />
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Meet Our Team</h2>
+            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+              The passionate minds behind InterviewExceler.AI
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                name: "Humesh Deshmukh",
+                role: "Founder & CEO",
+                description: "Visionary leader driving the mission of InterviewExceler.AI.",
+              },
+              {
+                name: "Aisha Agrawal",
+                role: "Co-Founder & COO",
+                description: "Operational strategist ensuring seamless execution and growth.",
+              },
+              {
+                name: "Srushti Soitkar",
+                role: "Product Manager",
+                description: "Focused on delivering user-centric and effective solutions.",
+              },
+              {
+                name: "Shrish Deshmukh",
+                role: "Lead Engineer",
+                description: "Building robust and scalable technology for interview preparation.",
+              },
+            ].map((member, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative bg-white/[0.02] hover:bg-white/[0.05] backdrop-blur-xl border border-white/10 hover:border-[#fcba28]/30 rounded-2xl p-8 text-center transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+                <div className="relative z-10">
+                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#fcba28]/20 to-[#fcba28]/5 rounded-full flex items-center justify-center">
+                    <Users className="w-10 h-10 text-[#fcba28]" />
                   </div>
-                  <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
-                  <p className="text-white/60">{stat.label}</p>
-                </motion.div>
-              );
-            })}
+                  <h3 className="text-xl font-bold text-white mb-2">{member.name}</h3>
+                  <p className="text-[#fcba28] font-semibold mb-3 text-sm">{member.role}</p>
+                  <p className="text-white/60 text-sm leading-relaxed">{member.description}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </MaxWidthWrapper>
-      </section> */}
+      </section>
 
       {/* Mission & Vision Section */}
-      <section className="relative py-16">
+      <section className="relative py-20 z-10">
         <MaxWidthWrapper>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-8 transition-colors"
+              className="group relative bg-gradient-to-br from-white/[0.05] to-white/[0.02] hover:from-white/[0.08] hover:to-white/[0.03] backdrop-blur-xl border border-white/10 hover:border-[#fcba28]/30 rounded-2xl p-10 transition-all duration-300"
             >
-              <h2 className="text-2xl font-bold text-white mb-4">Our Mission</h2>
-              <p className="text-white/60">{companyDescription.mission}</p>
+              <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Target className="w-20 h-20 text-[#fcba28]" />
+              </div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 bg-[#fcba28] rounded-full animate-pulse" />
+                  <span className="text-xs font-semibold text-[#fcba28] uppercase tracking-wider">Our Mission</span>
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-4">Democratizing Interview Success</h2>
+                <p className="text-white/70 leading-relaxed text-lg">
+                  We're on a mission to level the playing field for job seekers everywhere. By combining advanced AI with real-world interview expertise, we provide personalized, accessible, and effective preparation tools that transform anxiety into confidence.
+                </p>
+              </div>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-8 transition-colors"
+              className="group relative bg-gradient-to-br from-white/[0.05] to-white/[0.02] hover:from-white/[0.08] hover:to-white/[0.03] backdrop-blur-xl border border-white/10 hover:border-[#60a5fa]/30 rounded-2xl p-10 transition-all duration-300"
             >
-              <h2 className="text-2xl font-bold text-white mb-4">Our Vision</h2>
-              <p className="text-white/60">{companyDescription.vision}</p>
+              <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Rocket className="w-20 h-20 text-[#60a5fa]" />
+              </div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 bg-[#60a5fa] rounded-full animate-pulse" />
+                  <span className="text-xs font-semibold text-[#60a5fa] uppercase tracking-wider">Our Vision</span>
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-4">The Future of Career Preparation</h2>
+                <p className="text-white/70 leading-relaxed text-lg">
+                  We envision a world where every job seeker has access to world-class interview coaching powered by AI. Where preparation is personalized, feedback is instant, and success is achievable for everyone, regardless of background or resources.
+                </p>
+              </div>
             </motion.div>
           </div>
         </MaxWidthWrapper>
       </section>
 
-      {/* Values Section */}
-      <section className="relative py-16">
+      {/* What Makes Us Different */}
+      <section className="relative py-20 z-10">
         <MaxWidthWrapper>
-          <h2 className="text-3xl font-bold text-center text-white mb-12">Our Values</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {companyValues.map((value, index) => {
-              const Icon = value.icon;
+          <div className="text-center mb-16">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
+            >
+              What Makes Us Different
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-xl text-white/60 max-w-2xl mx-auto"
+            >
+              Experience the next generation of interview preparation
+            </motion.p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Brain,
+                title: "AI-Powered Analysis",
+                description: "Advanced algorithms analyze your responses in real-time, providing instant feedback on content, delivery, and body language.",
+                color: "#fcba28"
+              },
+              {
+                icon: Zap,
+                title: "Personalized Learning Paths",
+                description: "Adaptive difficulty that evolves with your progress, ensuring you're always challenged but never overwhelmed.",
+                color: "#60a5fa"
+              },
+              {
+                icon: Users,
+                title: "Industry-Specific Prep",
+                description: "Tailored questions and scenarios for tech, finance, healthcare, and more - matching real interview environments.",
+                color: "#34d399"
+              },
+              {
+                icon: Target,
+                title: "Actionable Insights",
+                description: "Detailed performance analytics showing exactly where to improve, with specific tips for each area.",
+                color: "#f472b6"
+              },
+              {
+                icon: Sparkles,
+                title: "Realistic Simulations",
+                description: "Practice with AI interviewers that ask follow-up questions and adapt to your answers like real hiring managers.",
+                color: "#a78bfa"
+              },
+              {
+                icon: Award,
+                title: "Proven Results",
+                description: "Our users report 47% average improvement in interview performance and 3x higher callback rates.",
+                color: "#fb923c"
+              },
+            ].map((feature, index) => {
+              const Icon = feature.icon;
               return (
                 <motion.div
                   key={index}
@@ -150,15 +214,16 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 transition-colors"
+                  className="group relative bg-white/[0.02] hover:bg-white/[0.05] backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-2xl p-8 transition-all duration-300"
                 >
-                  <div className="flex justify-center text-[#fcba28] mb-4">
-                    <Icon className="w-8 h-8" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+                  <div className="relative z-10">
+                    <div className="mb-5" style={{ color: feature.color }}>
+                      <Icon className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                    <p className="text-white/60 leading-relaxed">{feature.description}</p>
                   </div>
-                  <h3 className="text-xl font-semibold text-white text-center mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-white/60 text-center">{value.description}</p>
                 </motion.div>
               );
             })}
@@ -166,78 +231,33 @@ export default function About() {
         </MaxWidthWrapper>
       </section>
 
-      {/* Milestones Section */}
-      <section className="relative py-16">
+      {/* CTA Section */}
+      <section className="relative py-24 z-10">
         <MaxWidthWrapper>
-          <h2 className="text-3xl font-bold text-center text-white mb-12">Our Journey</h2>
-          <div className="space-y-8">
-            {companyMilestones.map((milestone, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="flex items-center gap-8"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden bg-gradient-to-br from-[#fcba28]/20 to-[#fcba28]/5 border border-[#fcba28]/20 rounded-3xl p-12 md:p-16 text-center"
+          >
+            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                Ready to Excel in Your Next Interview?
+              </h2>
+              <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+                Join thousands of successful job seekers who transformed their interview skills with InterviewExceler.AI
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 bg-[#fcba28] hover:bg-[#e9aa22] text-black font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-[#fcba28]/50"
               >
-                <div className="w-24 text-center">
-                  <span className="text-2xl font-bold text-[#fcba28]">{milestone.year}</span>
-                </div>
-                <div className="flex-1 group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 transition-colors">
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {milestone.title}
-                  </h3>
-                  <p className="text-white/60">{milestone.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </MaxWidthWrapper>
-      </section>
-
-      {/* Team Section */}
-      <section className="relative py-16">
-        <MaxWidthWrapper>
-          <h2 className="text-3xl font-bold text-center text-white mb-12">Our Team</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 transition-colors"
-              >
-                <h3 className="text-xl font-semibold text-white mb-1">{member.name}</h3>
-                <p className="text-[#fcba28] mb-3">{member.role}</p>
-                <p className="text-white/60">{member.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </MaxWidthWrapper>
-      </section>
-
-      {/* Features Section */}
-      <section className="relative py-16">
-        <MaxWidthWrapper>
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
-            Platform Features
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {companyDescription.features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group hover:bg-white/[0.1] bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 transition-colors"
-              >
-                <p className="text-white/80">{feature}</p>
-              </motion.div>
-            ))}
-          </div>
+                Start Practicing Now
+                <Rocket className="w-5 h-5" />
+              </motion.button>
+            </div>
+          </motion.div>
         </MaxWidthWrapper>
       </section>
     </div>

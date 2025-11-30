@@ -569,7 +569,12 @@ export default function SimulationPage() {
 
     try {
       // Save session to Supabase (using placeholder userId for now)
-      const session = await supabaseService.saveSession('user-' + Date.now(), data.resumeText || data.jobDescription, data.goal);
+      const session = await supabaseService.saveSession(
+        'user-' + Date.now(),
+        data.resumeText || '',
+        data.jobDescription || '',
+        data.goal
+      );
       if (session) {
         setSessionId(session.id);
       }

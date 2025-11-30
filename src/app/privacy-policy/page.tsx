@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
           <section>
             <p className="mb-4"><strong>Effective Date:</strong> January 13, 2025</p>
             <p className="mb-4"><strong>Last Updated:</strong> January 13, 2025</p>
-            
+
             <p className="mb-4">
               Welcome to <strong>InterviewExceler.Ai</strong> (&quot;we,&quot; &quot;our,&quot; &quot;us&quot;). This Privacy Policy explains how we collect, use, and protect your personal information when you use our AI-powered interview coaching platform.
             </p>
@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-2xl font-semibold mb-6 text-[#fcba28]">1. Information We Collect</h2>
-            
+
             <h3 className="text-xl font-medium mb-4 text-white">a. Interview-Related Information</h3>
             <ul className="list-disc list-inside mb-6 pl-4">
               <li>Video recordings of practice interviews</li>

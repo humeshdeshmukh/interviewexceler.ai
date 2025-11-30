@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TestProvider } from './context/TestContext';
 import LandingPage from './features/landing/LandingPage';
@@ -9,8 +10,17 @@ import AITestsPage from './features/ai-tests/AITestsPage';
 import LoadingSpinner from './components/LoadingSpinner';
 
 function PracticeTestsContent() {
+  const searchParams = useSearchParams();
   const [view, setView] = useState<'landing' | 'standard' | 'ai'>('landing');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Check URL params on mount to set initial view
+  useEffect(() => {
+    const viewParam = searchParams.get('view');
+    if (viewParam === 'ai' || viewParam === 'standard') {
+      setView(viewParam);
+    }
+  }, [searchParams]);
 
   const handleOptionSelect = (option: 'standard' | 'ai') => {
     setIsLoading(true);
@@ -74,7 +84,7 @@ function PracticeTestsContent() {
         </AnimatePresence>
       </div>
 
-     
+
     </div>
   );
 }

@@ -79,21 +79,21 @@ export default function AITestsPage({ onBack }: { onBack?: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-gradient-to-r from-[#fcba28]/10 to-[#fcd978]/10 backdrop-blur-sm mb-6">
+            {/* <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-gradient-to-r from-[#fcba28]/10 to-[#fcd978]/10 backdrop-blur-sm mb-6">
               <FaRobot className="w-12 h-12 text-[#fcba28]" />
-            </div>
+            </div> */}
             <h1 className="text-4xl font-bold mb-4 text-[#fcba28]">AI Interview Test Generator</h1>
             <p className="text-gray-400 max-w-2xl mx-auto">
               Generate customized technical interview tests powered by AI. Practice with real-world questions and get instant feedback.
             </p>
-            {onBack && (
+            {/* {onBack && (
               <button
                 onClick={onBack}
                 className="mt-8 text-sm text-gray-500 hover:text-white transition-colors"
               >
                 ← Back to Selection
               </button>
-            )}
+            )} */}
           </motion.div>
         )}
 

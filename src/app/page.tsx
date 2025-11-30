@@ -1,4 +1,4 @@
-import { CTA } from "@/features/landing-page/components/cta/CTA";
+
 import { FAQ } from "@/features/landing-page/components/faq/FAQ";
 import { Hero } from "@/features/landing-page/components/hero/Hero";
 import { Features } from "@/features/landing-page/components/features/Features";
@@ -10,7 +10,7 @@ export default function Home() {
       <Hero />
       {/* <Features />  */}
       <FAQ />
-      <CTA />
+
     </main>
   );
 }

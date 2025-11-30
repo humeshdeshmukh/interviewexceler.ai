@@ -3,43 +3,26 @@
 import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { MaxWidthWrapper } from "./MaxWidthWrapper";
-import { FaLinkedin, FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/Logo";
 
 const footerLinks = {
     products: [
-        { name: "Resume Builder", href: "/products/resume-builder" },
-        { name: "Mock Interviews", href: "/products/mock-interviews" },
-        { name: "Aptitude Practice", href: "/products/aptitude-ai" },
-        { name: "Practice Tests", href: "/products/Practice-Tests" }
+        { name: "Resume Builder", href: "/products/resume-builder/features/ai-resume" },
+        { name: "Mock Interviews", href: "/products/mock-interviews/visual-simulation/simulation" },
+        { name: "Practice Tests", href: "/products/Practice-Tests?view=ai" }
     ],
     services: [
-        { name: "Career Consultation", href: "/services/consultation" },
-        { name: "CV Revision", href: "/services/cv-revision" },
-        { name: "Salary Negotiation", href: "/services/salary-negotiation" }
-    ],
-    resources: [
-        { name: "Blog", href: "/resources/blog" },
-        { name: "FAQ", href: "/resources/faq" },
-        { name: "Newsletters", href: "/resources/newsletters" }
+        { name: "Career Consultation", href: "/services/consultation/ai" },
+        { name: "CV Revision", href: "/services/cv-revision/ai" },
+        { name: "Salary Negotiation", href: "/services/salary-negotiation/ai" }
     ],
     company: [
         { name: "About Us", href: "/company/about" },
-        { name: "Careers", href: "/company/careers" },
-        { name: "Contact", href: "/company/contact" }
+        { name: "Contact Us", href: "/company/contact" },
     ],
-    legal: [
-        { name: "Privacy Policy", href: "/privacy-policy" },
-        { name: "Terms", href: "/terms" },
-        { name: "Disclosure", href: "/disclosure" }
-    ],
-    social: [
-        { name: "Twitter", href: "https://twitter.com/", icon: FaXTwitter },
-        { name: "LinkedIn", href: "https://linkedin.com/", icon: FaLinkedin },
-        { name: "GitHub", href: "https://github.com/", icon: FaGithub },
-        { name: "Discord", href: "https://discord.gg/", icon: FaDiscord }
-    ]
+
 };
 
 export function Footer() {
@@ -62,34 +45,15 @@ export function Footer() {
                         {/* Logo and Description */}
                         {/* @ts-expect-error className is valid on motion.div */}
                         <motion.div
-                          className="col-span-2 lg:col-span-2"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5 }}
+                            className="col-span-2 lg:col-span-2"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
                         >
-                          <Logo className="mb-6" />
-                          <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                              Your AI-powered interview companion. Master your interview skills, build confidence, and accelerate your career growth with personalized feedback and expert guidance.
-                          </p>
-                          <div className="flex items-center gap-4">
-                              {footerLinks.social.map((link) => (
-                                  <motion.div
-                                      key={link.name}
-                                      whileHover={{ scale: 1.1 }}
-                                      whileTap={{ scale: 0.95 }}
-                                  >
-                                      <Link
-                                          href={link.href}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-muted-foreground hover:text-purple-400 transition-all duration-200"
-                                          aria-label={link.name}
-                                      >
-                                          <link.icon className="w-5 h-5" />
-                                      </Link>
-                                  </motion.div>
-                              ))}
-                          </div>
+                            <Logo className="mb-6" />
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                                Your AI-powered interview companion. Master your interview skills, build confidence, and accelerate your career growth with personalized feedback and expert guidance.
+                            </p>
                         </motion.div>
 
                         {/* Links Sections */}

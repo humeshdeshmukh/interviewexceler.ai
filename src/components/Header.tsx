@@ -8,11 +8,6 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import {
-  FaTwitter,
-  FaLinkedin,
-  FaFacebook,
-  FaInstagram,
-  FaGithub,
   FaFile,
   FaUserTie,
   FaRobot,
@@ -118,13 +113,7 @@ function applyTheme(themeKey: string) {
 }
 
 //Social Links
-const socialLinks = [
-  { href: 'https://x.com/', icon: FaTwitter, label: 'Twitter' },
-  { href: 'https://linkedin.com/company/', icon: FaLinkedin, label: 'LinkedIn' },
-  { href: 'https://facebook.com/', icon: FaFacebook, label: 'Facebook' },
-  { href: 'https://instagram.com/', icon: FaInstagram, label: 'Instagram' },
-  { href: 'https://github.com/', icon: FaGithub, label: 'GitHub' },
-];
+
 
 // Navigation Menus with icons
 const navigationMenus = [
@@ -132,39 +121,26 @@ const navigationMenus = [
     title: 'Products',
     icon: FaCube,
     links: [
-      { href: '/products/resume-builder', label: 'Resume Builder', icon: FaFile, description: 'Create professional resumes with AI assistance' },
-      { href: '/products/mock-interviews', label: 'Mock Interviews', icon: FaUserTie, description: 'Practice with AI-powered interview simulations' },
-      { href: '/products/aptitude-ai', label: 'Aptitude', icon: FaBrain, description: 'Enhance your logical and numerical abilities' },
-      { href: '/products/Practice-Tests', label: 'Practice Tests', icon: FaClipboard, description: 'Take industry-specific practice tests' },
+      { href: '/products/resume-builder/features/ai-resume', label: 'AI Resume Builder', icon: FaFile, description: 'Build ATS-friendly resumes instantly with AI' },
+      { href: '/products/mock-interviews/visual-simulation/simulation', label: 'AI Mock Interviews', icon: FaUserTie, description: 'Real-time video interview practice with AI feedback' },
+      { href: '/products/Practice-Tests?view=ai', label: 'AI Practice Tests', icon: FaClipboard, description: 'Master your domain with AI-generated tests' },
     ],
   },
   {
     title: 'Services',
     icon: FaGear,
     links: [
-      { href: '/services/consultation', label: 'Consultation', icon: FaComments, description: 'Get expert career guidance' },
-      { href: '/services/cv-revision', label: 'CV Revision', icon: FaPen, description: 'Professional CV review and optimization' },
-      { href: '/services/salary-negotiation', label: 'Salary Negotiation', icon: FaHandshake, description: 'Learn effective negotiation strategies' },
+      { href: '/services/consultation/ai', label: 'AI Career Consultation', icon: FaComments, description: 'Get expert career guidance from AI' },
+      { href: '/services/cv-revision/ai', label: 'AI CV Revision', icon: FaPen, description: 'Professional AI-powered CV review' },
+      { href: '/services/salary-negotiation/ai', label: 'AI Salary Negotiation', icon: FaHandshake, description: 'Master negotiation strategies with AI' },
     ],
   },
-  {
-    title: 'Resources',
-    icon: FaBook,
-    links: [
-      { href: '/resources/blog', label: 'Blog', icon: FaNewspaper, description: 'Latest articles and insights' },
-      { href: '/resources/faq', label: 'FAQ', icon: FaCircleQuestion, description: 'Frequently asked questions' },
-      { href: '/resources/newsletters', label: 'Newsletters', icon: FaEnvelope, description: 'Stay updated with our newsletter' },
-    ],
-  },
-
   {
     title: 'Company',
     icon: FaBuilding,
     links: [
       { href: '/company/about', label: 'About Us', icon: FaInfo, description: 'Our story and mission' },
-      { href: '/company/careers', label: 'Careers', icon: FaBriefcase, description: 'Join our team' },
-      { href: '/company/contact', label: 'Contact Us', icon: FaEnvelope, description: 'Get in touch' },
-
+      { href: '/company/contact', label: 'Contact Us', icon: FaEnvelope, description: 'Get in touch with us' },
     ],
   },
 ];
@@ -373,7 +349,7 @@ export const Header = () => {
       </div>
       {/* End Floating Multi-Theme Selector */}
       <MaxWidthWrapper>
-        <nav className="flex items-center h-20" role="navigation" ref={menuRef}>
+        <nav className="flex items-center h-20 justify-between relative" role="navigation" ref={menuRef}>
           {/* Logo with hover effect */}
           <motion.div
             className="flex items-center md:mr-8 lg:mr-10 xl:mr-12"
@@ -382,8 +358,9 @@ export const Header = () => {
           >
             <Logo className="flex-shrink-0" />
           </motion.div>
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center justify-between flex-1">
+
+          {/* Desktop Navigation Links - Centered */}
+          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <ul className="flex items-center gap-8 lg:gap-10 xl:gap-12" role="menubar">
               {navigationMenus.map((menu, idx) => (
                 <div
@@ -460,41 +437,24 @@ export const Header = () => {
                 </div>
               ))}
             </ul>
-            {/* Desktop Social Links & User Actions */}
-            <div className="flex items-center gap-4 lg:gap-5 xl:gap-6">
-              {socialLinks.map((social, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    target="_blank"
-                    href={social.href}
-                    aria-label={social.label}
-                    className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/10 transition-all duration-300"
-                  >
-                    <social.icon className="h-4 w-4 text-muted-foreground hover:text-[#fcba28] transition-colors" />
-                  </Link>
-                </motion.div>
-              ))}
-              <div className="h-6 w-px bg-border/10 mx-2" />
+          </div>
 
-              {loading ? (
-                <UserButtonLoading />
-              ) : isAuthenticated ? (
-                <UserButton />
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => !isNavigating && setAuthModalOpen(true)}
-                  className="px-4 py-1.5 text-sm rounded-md font-medium bg-[#fcba28] text-background hover:bg-[#fcba28]/90 transition-all duration-300 shadow-sm border border-[#fcba28]/30"
-                >
-                  Sign in
-                </motion.button>
-              )}
-            </div>
+          {/* Desktop Social Links & User Actions - Right Aligned */}
+          <div className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 ml-auto">
+            {loading ? (
+              <UserButtonLoading />
+            ) : isAuthenticated ? (
+              <UserButton />
+            ) : (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => !isNavigating && setAuthModalOpen(true)}
+                className="px-4 py-1.5 text-sm rounded-md font-medium bg-[#fcba28] text-background hover:bg-[#fcba28]/90 transition-all duration-300 shadow-sm border border-[#fcba28]/30"
+              >
+                Sign in
+              </motion.button>
+            )}
           </div>
           {/* Mobile Menu & Actions */}
           <div className="md:hidden flex items-center gap-2 ml-auto">

@@ -2,8 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "InterviewExceler.Ai - Disclosures",
-  description: "Important disclosures about our AI interview coaching platform, data usage, and privacy practices."
+    title: "InterviewExceler.Ai - Disclosures",
+    description: "Important disclosures about our AI interview coaching platform, data usage, and privacy practices."
 }
 
 export default function Disclosures() {

@@ -3,55 +3,35 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTwitter, FaLinkedin, FaFacebook, FaInstagram, FaGithub } from 'react-icons/fa6';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 
-// Social Links
-const socialLinks = [
-  { href: 'https://x.com/', icon: FaTwitter, label: 'Twitter' },
-  { href: 'https://linkedin.com/company/', icon: FaLinkedin, label: 'LinkedIn' },
-  { href: 'https://facebook.com/', icon: FaFacebook, label: 'Facebook' },
-  { href: 'https://instagram.com/', icon: FaInstagram, label: 'Instagram' },
-  { href: 'https://github.com/', icon: FaGithub, label: 'GitHub' },
-];
 
+// Navigation Menus
 // Navigation Menus
 const navigationMenus = [
   {
     title: 'Products',
     links: [
-      { href: '/products/mock-interviews', label: 'Mock Interviews' },
-      { href: '/products/aptitude-ai', label: 'Aptitude Practice' },
-      { href: '/products/resume-builder', label: 'Resume Builder' },
-      { href: '/products/Practice-Tests', label: 'Practice-Tests' },
+      { href: '/products/resume-builder/features/ai-resume', label: 'Resume Builder' },
+      { href: '/products/mock-interviews/visual-simulation/simulation', label: 'Mock Interviews' },
+      { href: '/products/Practice-Tests?view=ai', label: 'Practice Tests' },
     ],
   },
   {
     title: 'Services',
     links: [
-      { href: '/services/consultation', label: 'Career Consultation' },
-      { href: '/services/cv-revision', label: 'CV Revision' },
-      { href: '/services/salary-negotiation', label: 'Salary Negotiation' },
+      { href: '/services/consultation/ai', label: 'Consultation' },
+      { href: '/services/cv-revision/ai', label: 'CV Revision' },
+      { href: '/services/salary-negotiation/ai', label: 'Salary Negotiation' },
     ],
   },
-  {
-    title: 'Resources',
-    links: [
-      { href: '/resources/blog', label: 'Blog' },
-      { href: '/resources/faq', label: 'FAQ' },
-      { href: '/resources/newsletters', label: 'Newsletters' },
-    ],
-  },
- 
   {
     title: 'Company',
     links: [
       { href: '/company/about', label: 'About Us' },
-      { href: '/company/careers', label: 'Careers' },
       { href: '/company/contact', label: 'Contact Us' },
     ],
   },
@@ -115,7 +95,7 @@ export const MobileMenu = () => {
     document.addEventListener('keydown', handleEscape);
     document.addEventListener('mousedown', handleClickOutside);
     document.body.style.overflow = 'hidden';
-    
+
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('mousedown', handleClickOutside);
@@ -182,27 +162,6 @@ export const MobileMenu = () => {
             </motion.div>
           ))}
         </nav>
-
-        <motion.div
-          variants={itemVariants}
-          className="mt-auto pt-8 border-t border-border/10"
-        >
-          <div className="flex justify-between items-center">
-            {socialLinks.map((social, idx) => (
-              <motion.a
-                key={idx}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 text-muted-foreground hover:text-[#fcba28]"
-              >
-                <social.icon size={24} />
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
       </motion.div>
     </>
   );

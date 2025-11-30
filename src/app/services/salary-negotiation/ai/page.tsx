@@ -45,13 +45,13 @@ export default function SalaryNegotiationPage() {
         {/* Header - Only show when NOT showing results */}
         {!showResults && (
           <div className="text-center mb-8">
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               className="inline-block p-3 rounded-full bg-[#fcba28]/20 mb-4"
             >
               <Calculator className="w-6 h-6 text-[#fcba28]" />
-            </motion.div>
+            </motion.div> */}
             <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-[#fcba28] via-[#fcd978] to-[#fcba28] text-transparent bg-clip-text">
               AI Salary Negotiation
             </h1>

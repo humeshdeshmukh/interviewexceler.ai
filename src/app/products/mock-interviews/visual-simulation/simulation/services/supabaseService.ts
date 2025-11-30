@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 
 export const supabaseService = {
-    async saveSession(userId: string, resumeText: string, goal: string) {
+    async saveSession(userId: string, resumeText: string, jobDescription: string, goal: string) {
         const supabase = createClient();
         // @ts-ignore
         const { data, error } = await supabase
@@ -9,6 +9,7 @@ export const supabaseService = {
             .insert({
                 user_id: userId,
                 resume_text: resumeText,
+                job_description: jobDescription,
                 goal: goal,
                 created_at: new Date().toISOString()
             })

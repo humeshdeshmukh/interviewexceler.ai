@@ -1,5 +1,6 @@
 'use server';
 
+import { z } from 'zod';
 import { contactFormSchema, ContactFormData } from './validation';
 
 export async function submitContactForm(data: ContactFormData) {
@@ -12,7 +13,7 @@ export async function submitContactForm(data: ContactFormData) {
 
     // In production, you would send this to your email service
     // Example: await sendEmail({
-    //   to: "support@InterviewExceler.Ai",
+    //   to: "interviewmastercontact@gmail.com",
     //   from: validatedData.email,
     //   subject: validatedData.subject,
     //   text: `Name: ${validatedData.name}\nEmail: ${validatedData.email}\nMessage: ${validatedData.message}`,
@@ -25,10 +26,12 @@ export async function submitContactForm(data: ContactFormData) {
   } catch (error) {
     console.error('Contact form error:', error);
     if (error instanceof z.ZodError) {
+      // Get the first error message from issues array
+      const firstError = error.issues?.[0];
       return {
         success: false,
-        message: 'Invalid form data. Please check your inputs.',
-        errors: error.errors,
+        message: firstError?.message || 'Invalid form data. Please check your inputs.',
+        errors: error.issues,
       };
     }
     return {
