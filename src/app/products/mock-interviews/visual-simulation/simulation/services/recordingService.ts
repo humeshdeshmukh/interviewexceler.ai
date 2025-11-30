@@ -1,21 +1,7 @@
 class RecordingService {
-  private recorder: any | null = null;
+  private mediaRecorder: MediaRecorder | null = null;
   private stream: MediaStream | null = null;
-  private RecordRTCModule: any = null;
-
-  private async loadRecordRTC() {
-    if (typeof window === 'undefined') return null;
-    if (this.RecordRTCModule) return this.RecordRTCModule;
-
-    try {
-      const RecordRTCModule = await import('recordrtc');
-      this.RecordRTCModule = RecordRTCModule.RecordRTCPromisesHandler;
-      return RecordRTCModule.RecordRTCPromisesHandler;
-    } catch (error) {
-      console.error('Failed to load RecordRTC:', error);
-      throw new Error('Failed to load RecordRTC');
-    }
-  }
+  private recordedChunks: Blob[] = [];
 
   async startRecording(): Promise<void> {
     if (typeof window === 'undefined') {
@@ -36,21 +22,32 @@ class RecordingService {
         }
       });
 
-      const RecordRTCClass = await this.loadRecordRTC();
-      if (!RecordRTCClass) throw new Error('Failed to load RecordRTC');
+      // Use native MediaRecorder API instead of RecordRTC
+      const options: MediaRecorderOptions = {
+        mimeType: 'video/webm;codecs=vp9,opus',
+        videoBitsPerSecond: 2500000 // 2.5 Mbps for better quality
+      };
 
-      this.recorder = new RecordRTCClass(this.stream, {
-        type: 'video',
-        mimeType: 'video/webm;codecs=vp9',
-        bitsPerSecond: 2500000, // 2.5 Mbps for better quality
-        frameInterval: 90,
-        video: {
-          width: 1920,
-          height: 1080
+      // Fallback to vp8 if vp9 is not supported
+      if (!MediaRecorder.isTypeSupported(options.mimeType!)) {
+        options.mimeType = 'video/webm;codecs=vp8,opus';
+      }
+
+      // Fallback to default if neither is supported
+      if (!MediaRecorder.isTypeSupported(options.mimeType!)) {
+        options.mimeType = 'video/webm';
+      }
+
+      this.recordedChunks = [];
+      this.mediaRecorder = new MediaRecorder(this.stream, options);
+
+      this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
+        if (event.data && event.data.size > 0) {
+          this.recordedChunks.push(event.data);
         }
-      });
+      };
 
-      await this.recorder.startRecording();
+      this.mediaRecorder.start(100); // Collect data every 100ms
     } catch (error) {
       console.error('Error starting recording:', error);
       throw error;
@@ -58,28 +55,41 @@ class RecordingService {
   }
 
   async stopRecording(): Promise<Blob> {
-    if (!this.recorder) {
+    if (!this.mediaRecorder) {
       throw new Error('No recording in progress');
     }
 
-    try {
-      await this.recorder.stopRecording();
-      const blob = await this.recorder.getBlob();
-
-      // Stop all tracks
-      if (this.stream) {
-        this.stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+    return new Promise((resolve, reject) => {
+      if (!this.mediaRecorder) {
+        reject(new Error('No recording in progress'));
+        return;
       }
 
-      // Clean up
-      this.recorder = null;
-      this.stream = null;
+      this.mediaRecorder.onstop = () => {
+        const blob = new Blob(this.recordedChunks, {
+          type: this.mediaRecorder?.mimeType || 'video/webm'
+        });
 
-      return blob;
-    } catch (error) {
-      console.error('Error stopping recording:', error);
-      throw error;
-    }
+        // Stop all tracks
+        if (this.stream) {
+          this.stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+        }
+
+        // Clean up
+        this.mediaRecorder = null;
+        this.stream = null;
+        this.recordedChunks = [];
+
+        resolve(blob);
+      };
+
+      this.mediaRecorder.onerror = (event: Event) => {
+        console.error('MediaRecorder error:', event);
+        reject(new Error('Recording failed'));
+      };
+
+      this.mediaRecorder.stop();
+    });
   }
 
   async generateThumbnail(videoBlob: Blob): Promise<string> {
