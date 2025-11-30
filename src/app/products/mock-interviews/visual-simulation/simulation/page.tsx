@@ -71,6 +71,7 @@ export default function SimulationPage() {
   const [posture, setPosture] = useState<string | null>(null);
   const [correctedTranscript, setCorrectedTranscript] = useState('');
   const [isCorrectingTranscript, setIsCorrectingTranscript] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
 
   // Personalized Interview State
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
@@ -321,6 +322,7 @@ export default function SimulationPage() {
         await recordingService.startRecording();
         setIsRecording(true);
         setIsAISpeaking(true);
+        setRecordingError(null); // Clear any previous errors
 
         // Clear transcript
         setTranscript({
@@ -425,11 +427,24 @@ export default function SimulationPage() {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Recording error:', error);
       setIsRecording(false);
       if (recognition) {
         recognition.stop();
+      }
+
+      // Provide user-friendly error messages
+      if (error?.name === 'NotAllowedError' || error?.name === 'PermissionDeniedError') {
+        setRecordingError('Camera/microphone access denied. Please enable permissions in your browser settings and try again.');
+      } else if (error?.name === 'NotFoundError') {
+        setRecordingError('No camera or microphone found. Please connect a device and try again.');
+      } else if (error?.name === 'NotReadableError') {
+        setRecordingError('Camera/microphone is already in use by another application. Please close other applications and try again.');
+      } else if (error?.message) {
+        setRecordingError(`Recording failed: ${error.message}`);
+      } else {
+        setRecordingError('Failed to start recording. Please check your camera and microphone.');
       }
     }
   };
@@ -867,6 +882,30 @@ export default function SimulationPage() {
                 </div>
               </div>
             </div>
+
+            {/* Error Message Display */}
+            {recordingError && (
+              <motion.div
+                className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl backdrop-blur-sm"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 flex-1">
+                    <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                    <p className="text-red-400 text-sm">{recordingError}</p>
+                  </div>
+                  <button
+                    onClick={() => setRecordingError(null)}
+                    className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition-colors flex-shrink-0"
+                    aria-label="Dismiss error"
+                  >
+                    <X className="w-4 h-4 text-red-400" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {/* Start/Stop Recording Button above Practice Notes */}
             <div className="flex justify-end items-center gap-4 mt-4">

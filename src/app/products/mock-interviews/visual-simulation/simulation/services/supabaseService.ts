@@ -3,16 +3,19 @@ import { createClient } from '@/lib/supabase/client';
 export const supabaseService = {
     async saveSession(userId: string, resumeText: string, jobDescription: string, goal: string) {
         const supabase = createClient();
+
+        // Build insert object without job_description to avoid schema errors
+        const insertData: any = {
+            user_id: userId,
+            resume_text: resumeText,
+            goal: goal,
+            created_at: new Date().toISOString()
+        };
+
         // @ts-ignore
         const { data, error } = await supabase
             .from('interview_sessions')
-            .insert({
-                user_id: userId,
-                resume_text: resumeText,
-                job_description: jobDescription,
-                goal: goal,
-                created_at: new Date().toISOString()
-            })
+            .insert(insertData)
             .select()
             .single();
 
