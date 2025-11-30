@@ -8,7 +8,9 @@ import { Toaster } from "@/components/ui/sonner";
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
-export const metadata = generateMetadata();
+export const metadata = generateMetadata({
+  path: "/products",
+});
 
 export default function ProductsLayout({
   children,

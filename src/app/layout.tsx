@@ -15,7 +15,12 @@ import { ChatBot } from "@/components/ChatBot/ChatBot";
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
-export const metadata = generateMetadata();
+export const metadata = generateMetadata({
+  verification: {
+    google: "VuzD4dm2SB7NQd4PNgVngemzKqNWH8Zje7UMpHtKsUQ",
+  },
+  path: "/",
+});
 
 export default function RootLayout({
   children,
@@ -46,6 +51,23 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
         </AuthProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "InterviewExceler.Ai",
+              "url": "https://www.interviewexceler.com",
+              "logo": "https://www.interviewexceler.com/logo.svg",
+              "sameAs": [
+                "https://twitter.com/interviewexceler",
+                "https://www.linkedin.com/company/interviewexceler"
+              ],
+              "description": "Elevate your career with InterviewExceler.Ai. Practice with AI-driven mock interviews, get personalized feedback, and land your dream job."
+            })
+          }}
+        />
       </body>
     </html>
   );

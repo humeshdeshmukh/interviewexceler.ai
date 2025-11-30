@@ -13,15 +13,25 @@ export function generateMetadata({
   description = "Elevate your career with InterviewExceler.Ai. Practice with AI-driven mock interviews, get personalized feedback, and land your dream job.",
   image = "/thumbnail.png",
   noIndex = false,
+  verification = {},
+  path = "",
 }: {
   title?: string
   description?: string
   image?: string
   icons?: string
   noIndex?: boolean
+  verification?: {
+    google?: string;
+    yandex?: string;
+    yahoo?: string;
+    other?: Record<string, string | number | (string | number)[]>
+  }
+  path?: string
 } = {}): Metadata {
   const baseUrl = 'https://www.interviewexceler.com';
   const fullImageUrl = image.startsWith('http') ? image : new URL(image, baseUrl).toString();
+  const canonicalUrl = new URL(path, baseUrl).toString();
 
   return {
     title,
@@ -72,6 +82,10 @@ export function generateMetadata({
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
+    },
+    verification,
+    alternates: {
+      canonical: canonicalUrl,
     },
   }
 }
