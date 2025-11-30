@@ -446,14 +446,12 @@ export const Header = () => {
             ) : isAuthenticated ? (
               <UserButton />
             ) : (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => !isNavigating && setAuthModalOpen(true)}
+              <Link
+                href="/auth"
                 className="px-4 py-1.5 text-sm rounded-md font-medium bg-[#fcba28] text-background hover:bg-[#fcba28]/90 transition-all duration-300 shadow-sm border border-[#fcba28]/30"
               >
                 Sign in
-              </motion.button>
+              </Link>
             )}
           </div>
           {/* Mobile Menu & Actions */}
@@ -490,14 +488,12 @@ export const Header = () => {
             ) : isAuthenticated ? (
               <UserButton />
             ) : (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => !isNavigating && setAuthModalOpen(true)}
+              <Link
+                href="/auth"
                 className="px-3 py-1 text-xs rounded-lg font-medium bg-[#fcba28] text-background hover:bg-[#fcba28]/90 transition-all duration-300"
               >
                 Sign in
-              </motion.button>
+              </Link>
             )}
 
             <div className="h-5 w-px bg-border/10" />
@@ -505,6 +501,6 @@ export const Header = () => {
           </div>
         </nav>
       </MaxWidthWrapper>
-    </motion.header>
+    </motion.header >
   );
 };
