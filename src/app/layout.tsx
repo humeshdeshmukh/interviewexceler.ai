@@ -18,7 +18,20 @@ const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 export const metadata = generateMetadata({
   verification: {
     google: "VuzD4dm2SB7NQd4PNgVngemzKqNWH8Zje7UMpHtKsUQ",
+    other: {
+      "msvalidate.01": "EC0850B81FA4EB0505CA4C9900D49D02",
+    },
   },
+  keywords: [
+    "mock interview",
+    "AI interview practice",
+    "resume builder",
+    "interview preparation",
+    "career coaching",
+    "salary negotiation",
+    "aptitude test",
+    "InterviewExceler.Ai"
+  ],
   path: "/",
 });
 

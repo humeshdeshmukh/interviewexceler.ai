@@ -15,6 +15,7 @@ export function generateMetadata({
   noIndex = false,
   verification = {},
   path = "",
+  keywords = [],
 }: {
   title?: string
   description?: string
@@ -28,6 +29,7 @@ export function generateMetadata({
     other?: Record<string, string | number | (string | number)[]>
   }
   path?: string
+  keywords?: string | string[]
 } = {}): Metadata {
   const baseUrl = 'https://www.interviewexceler.com';
   const fullImageUrl = image.startsWith('http') ? image : new URL(image, baseUrl).toString();
@@ -36,6 +38,7 @@ export function generateMetadata({
   return {
     title,
     description,
+    keywords,
     openGraph: {
       type: 'website',
       locale: 'en_US',
