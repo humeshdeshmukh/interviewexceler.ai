@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { AuthFlow } from "@/features/auth/lib/types";
 import { useAuth } from "@/features/auth/context/AuthContext";
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 import { X } from "lucide-react";
 
 import {
@@ -29,6 +29,7 @@ export const SignInCard = ({ setState, onClose }: SignInCardProps) => {
         email: "",
         password: "",
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -36,6 +37,14 @@ export const SignInCard = ({ setState, onClose }: SignInCardProps) => {
             setError("Please fill in all fields");
             return;
         }
+
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(credentials.email)) {
+            setError("Please enter a valid email address");
+            return;
+        }
+
         setPending(true);
         setError(null);
         try {
@@ -87,13 +96,28 @@ export const SignInCard = ({ setState, onClose }: SignInCardProps) => {
                             onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                             className="h-10 text-sm bg-white/5 border-white/10 focus:border-[#fcba28]/50 focus:ring-[#fcba28]/30 transition-all duration-300"
                         />
-                        <Input
-                            type="password"
-                            placeholder="Password"
-                            value={credentials.password}
-                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                            className="h-10 text-sm bg-white/5 border-white/10 focus:border-[#fcba28]/50 focus:ring-[#fcba28]/30 transition-all duration-300"
-                        />
+
+                        {/* Password Field with Toggle */}
+                        <div className="relative">
+                            <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                value={credentials.password}
+                                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                                className="h-10 text-sm bg-white/5 border-white/10 focus:border-[#fcba28]/50 focus:ring-[#fcba28]/30 transition-all duration-300 pr-10"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     <Button

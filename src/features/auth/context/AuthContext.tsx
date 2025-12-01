@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signUp = async (email: string, password: string, full_name: string) => {
         try {
-            const { error } = await supabase.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -92,10 +92,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     },
                 },
             });
-            if (error) throw error;
+
+            console.log('SignUp response:', { hasUser: !!data?.user, hasSession: !!data?.session, error });
+
+            if (error) {
+                // Provide specific error messages
+                console.error('Sign up failed:', error);
+                throw new Error(error.message || 'Failed to create account');
+            }
+
+            // Check if email confirmation is required
+            if (data?.user && !data?.session) {
+                // User created but needs to confirm email
+                // Don't log this as an error - it's expected behavior
+                console.log('Email confirmation required for:', email);
+                throw new Error('CONFIRM_EMAIL');
+            }
+
+            // If we have both user and session, email confirmation is disabled
+            if (data?.user && data?.session) {
+                console.log('User created and logged in immediately (email confirmation disabled)');
+                setAuthModalOpen(false);
+                return;
+            }
+
             setAuthModalOpen(false);
-        } catch (error) {
-            console.error('Sign up failed:', error);
+        } catch (error: any) {
+            // Only log if it's not the expected CONFIRM_EMAIL case
+            if (error.message !== 'CONFIRM_EMAIL') {
+                console.error('Sign up failed:', error);
+            }
             throw error;
         }
     };
