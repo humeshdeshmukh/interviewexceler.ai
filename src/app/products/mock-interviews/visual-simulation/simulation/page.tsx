@@ -72,6 +72,7 @@ export default function SimulationPage() {
   const [correctedTranscript, setCorrectedTranscript] = useState('');
   const [isCorrectingTranscript, setIsCorrectingTranscript] = useState(false);
   const [recordingError, setRecordingError] = useState<string | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   // Personalized Interview State
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
@@ -108,6 +109,9 @@ export default function SimulationPage() {
     postureIssues: new Set(),
     expressions: new Set()
   });
+
+  // Ref for AI analysis panel to enable auto-scroll
+  const analysisRef = React.useRef<HTMLDivElement>(null);
 
   const getWordCount = (text: string) => {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length;
@@ -377,6 +381,8 @@ export default function SimulationPage() {
         const wordCount = getWordCount(transcript.final);
         if (wordCount > 1) {
           setIsLoadingGemini(true);
+          setAnalysisError(null); // Clear any previous errors
+          console.log('🔍 Starting Gemini analysis for answer:', transcript.final.substring(0, 50) + '...');
 
           // Calculate visual summary
           const avgFaceCount = visualMetricsRef.current.faceCounts.length > 0
@@ -394,9 +400,14 @@ export default function SimulationPage() {
             transcript.final.trim(),
             visualSummary
           ).then(async result => {
-            console.log('Gemini Analysis Result:', result);
+            console.log('✅ Gemini Analysis Result:', result);
             setGeminiAnalysis(result);
             setIsLoadingGemini(false);
+
+            // Auto-scroll to analysis panel
+            setTimeout(() => {
+              analysisRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
 
             // Save to Supabase if session exists
             if (sessionId) {
@@ -409,8 +420,13 @@ export default function SimulationPage() {
               );
             }
           }).catch(error => {
-            console.error('Gemini analysis failed:', error);
+            console.error('❌ Gemini analysis failed:', error);
             setIsLoadingGemini(false);
+            setAnalysisError(
+              error?.message?.includes('API key')
+                ? 'API key not configured. Please check your environment variables.'
+                : error?.message || 'Failed to analyze your response. Please try again.'
+            );
           });
         } else {
           // Handle short answers
@@ -1458,144 +1474,210 @@ export default function SimulationPage() {
           </div>
         </div>
 
-        {/* Gemini Deep Analysis Section */}
-        {(geminiAnalysis || isLoadingGemini) && (
-          <div className="mt-8 p-6 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-emerald-500/10 border border-purple-500/20 rounded-xl backdrop-blur-lg relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#a855f720_0%,transparent_50%)]" />
+        {/* Gemini Deep Analysis Section - Always visible with different states */}
+        <div ref={analysisRef} className="mt-8 p-6 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-emerald-500/10 border border-purple-500/20 rounded-xl backdrop-blur-lg relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#a855f720_0%,transparent_50%)]" />
 
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/20">
-                  <MessageSquare className="w-7 h-7 text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold text-white">AI Analysis</h3>
-                  <p className="text-white/60 text-sm">Professional interview coaching insights</p>
+          <div className="relative">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/20">
+                <MessageSquare className="w-7 h-7 text-purple-400" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold text-white">AI Answer Analysis</h3>
+                <p className="text-white/60 text-sm">Professional interview coaching insights powered by Gemini AI</p>
+              </div>
+            </div>
+
+            {/* Loading State */}
+            {isLoadingGemini && (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-16 h-16 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
+                  <p className="text-white/60 text-lg">Analyzing your response with AI...</p>
+                  <p className="text-white/40 text-sm">This may take a few seconds</p>
                 </div>
               </div>
+            )}
 
-              {isLoadingGemini ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
-                    <p className="text-white/60">Analyzing your response with AI...</p>
-                  </div>
+            {/* Error State */}
+            {!isLoadingGemini && analysisError && (
+              <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <AlertTriangle className="w-6 h-6 text-red-400" />
+                  <h4 className="text-lg font-medium text-red-400">Analysis Error</h4>
                 </div>
-              ) : geminiAnalysis && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
-                    <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-                      <BarChart className="w-5 h-5 text-purple-400" />
-                      Analysis & Feedback
-                    </h4>
-                    <p className="text-white/70 leading-relaxed">{geminiAnalysis.analysis}</p>
+                <p className="text-white/70 mb-4">{analysisError}</p>
+                <button
+                  onClick={() => {
+                    setAnalysisError(null);
+                    if (transcript.final.trim().length > 0) {
+                      handleToggleRecording();
+                    }
+                  }}
+                  className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
 
-                    {geminiAnalysis.keyImprovements && geminiAnalysis.keyImprovements.length > 0 && (
-                      <div className="mt-4 space-y-2">
-                        <p className="text-sm font-medium text-white/80">Key Improvements:</p>
-                        {geminiAnalysis.keyImprovements.map((improvement: string, idx: number) => (
-                          <div key={idx} className="flex items-start gap-2 text-sm text-white/60">
-                            <span className="text-purple-400 mt-1">•</span>
-                            <span>{improvement}</span>
-                          </div>
-                        ))}
+            {/* Success State - Analysis Results */}
+            {!isLoadingGemini && !analysisError && geminiAnalysis && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
+                  <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+                    <BarChart className="w-5 h-5 text-purple-400" />
+                    Analysis & Feedback
+                  </h4>
+                  <p className="text-white/70 leading-relaxed">{geminiAnalysis.analysis}</p>
+
+                  {geminiAnalysis.keyImprovements && geminiAnalysis.keyImprovements.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium text-white/80">Key Improvements:</p>
+                      {geminiAnalysis.keyImprovements.map((improvement: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-2 text-sm text-white/60">
+                          <span className="text-purple-400 mt-1">•</span>
+                          <span>{improvement}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
+                  <h4 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-blue-400" />
+                    Detailed Scores
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-white/70 text-sm">Overall Score</span>
+                        <span className="text-lg font-bold text-purple-400">{geminiAnalysis.score}/100</span>
+                      </div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-1000"
+                          style={{ width: `${geminiAnalysis.score}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {geminiAnalysis.communicationScore !== undefined && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-white/70 text-sm">Communication</span>
+                          <span className="text-sm font-medium text-blue-400">{geminiAnalysis.communicationScore}/100</span>
+                        </div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-400" style={{ width: `${geminiAnalysis.communicationScore}%` }} />
+                        </div>
+                      </div>
+                    )}
+
+                    {geminiAnalysis.clarity !== undefined && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-white/70 text-sm">Clarity</span>
+                          <span className="text-sm font-medium text-emerald-400">{geminiAnalysis.clarity}/100</span>
+                        </div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-400" style={{ width: `${geminiAnalysis.clarity}%` }} />
+                        </div>
+                      </div>
+                    )}
+
+                    {geminiAnalysis.confidence !== undefined && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-white/70 text-sm">Confidence</span>
+                          <span className="text-sm font-medium text-yellow-400">{geminiAnalysis.confidence}/100</span>
+                        </div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-yellow-400" style={{ width: `${geminiAnalysis.confidence}%` }} />
+                        </div>
+                      </div>
+                    )}
+
+                    {geminiAnalysis.bodyLanguageScore !== undefined && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-white/70 text-sm">Body Language</span>
+                          <span className="text-sm font-medium text-purple-400">{geminiAnalysis.bodyLanguageScore}/100</span>
+                        </div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full bg-purple-400" style={{ width: `${geminiAnalysis.bodyLanguageScore}%` }} />
+                        </div>
                       </div>
                     )}
                   </div>
-
-                  <div className="p-5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
-                    <h4 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-blue-400" />
-                      Detailed Scores
-                    </h4>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-white/70 text-sm">Overall Score</span>
-                          <span className="text-lg font-bold text-purple-400">{geminiAnalysis.score}/100</span>
-                        </div>
-                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-1000"
-                            style={{ width: `${geminiAnalysis.score}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {geminiAnalysis.communicationScore !== undefined && (
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white/70 text-sm">Communication</span>
-                            <span className="text-sm font-medium text-blue-400">{geminiAnalysis.communicationScore}/100</span>
-                          </div>
-                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-400" style={{ width: `${geminiAnalysis.communicationScore}%` }} />
-                          </div>
-                        </div>
-                      )}
-
-                      {geminiAnalysis.clarity !== undefined && (
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white/70 text-sm">Clarity</span>
-                            <span className="text-sm font-medium text-emerald-400">{geminiAnalysis.clarity}/100</span>
-                          </div>
-                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-400" style={{ width: `${geminiAnalysis.clarity}%` }} />
-                          </div>
-                        </div>
-                      )}
-
-                      {geminiAnalysis.confidence !== undefined && (
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white/70 text-sm">Confidence</span>
-                            <span className="text-sm font-medium text-yellow-400">{geminiAnalysis.confidence}/100</span>
-                          </div>
-                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-yellow-400" style={{ width: `${geminiAnalysis.confidence}%` }} />
-                          </div>
-                        </div>
-                      )}
-
-                      {geminiAnalysis.bodyLanguageScore !== undefined && (
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white/70 text-sm">Body Language</span>
-                            <span className="text-sm font-medium text-purple-400">{geminiAnalysis.bodyLanguageScore}/100</span>
-                          </div>
-                          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-purple-400" style={{ width: `${geminiAnalysis.bodyLanguageScore}%` }} />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {geminiAnalysis.improvedAnswer && (
-                    <div className="md:col-span-2 p-5 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-xl backdrop-blur-sm">
-                      <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-                        <ThumbsUp className="w-5 h-5 text-emerald-400" />
-                        Improved Version of Your Answer
-                      </h4>
-                      <p className="text-white/80 leading-relaxed italic">{geminiAnalysis.improvedAnswer}</p>
-                    </div>
-                  )}
-
-                  {geminiAnalysis.modelAnswer && (
-                    <div className="md:col-span-2 p-5 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl backdrop-blur-sm">
-                      <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-blue-400" />
-                        Model Answer (Best Practice)
-                      </h4>
-                      <p className="text-white/80 leading-relaxed">{geminiAnalysis.modelAnswer}</p>
-                    </div>
-                  )}
                 </div>
-              )}
-            </div>
+
+                {geminiAnalysis.improvedAnswer && (
+                  <div className="md:col-span-2 p-5 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-xl backdrop-blur-sm">
+                    <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+                      <ThumbsUp className="w-5 h-5 text-emerald-400" />
+                      Improved Version of Your Answer
+                    </h4>
+                    <p className="text-white/80 leading-relaxed italic">{geminiAnalysis.improvedAnswer}</p>
+                  </div>
+                )}
+
+                {geminiAnalysis.modelAnswer && (
+                  <div className="md:col-span-2 p-5 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl backdrop-blur-sm">
+                    <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-blue-400" />
+                      Model Answer (Best Practice)
+                    </h4>
+                    <p className="text-white/80 leading-relaxed">{geminiAnalysis.modelAnswer}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Empty/Waiting State */}
+            {!isLoadingGemini && !analysisError && !geminiAnalysis && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center max-w-md">
+                  <div className="w-20 h-20 rounded-full bg-purple-500/10 flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="w-10 h-10 text-purple-400" />
+                  </div>
+                  <h4 className="text-xl font-medium text-white mb-3">Ready for AI Analysis</h4>
+                  <p className="text-white/60 mb-2">Record your answer and stop the recording to receive:</p>
+                  <ul className="text-left text-white/50 text-sm space-y-2 mt-4">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      Detailed feedback on your answer quality
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      Communication and clarity scores
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      Body language analysis
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      Improved version of your answer
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      Model answer examples
+                    </li>
+                  </ul>
+                  <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                    <p className="text-sm text-blue-400 flex items-center gap-2 justify-center">
+                      <Lightbulb className="w-4 h-4" />
+                      Tip: Speak for at least 5-10 seconds for best analysis results
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Past Recordings */}
         {recordings.length > 0 && (
