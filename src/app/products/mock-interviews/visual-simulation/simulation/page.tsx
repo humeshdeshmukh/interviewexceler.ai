@@ -902,26 +902,7 @@ export default function SimulationPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       </div>
 
-      {/* Header with Glassmorphism */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button className="flex items-center text-white gap-2 hover:text-[#fcba28] transition-colors group">
-              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              Exit Interview
-            </button>
-            <div className="flex items-center gap-2">
-              <span className="text-white/60 text-sm hidden sm:block">{currentTime}</span>
-              <div className="w-px h-6 bg-white/10 hidden sm:block" />
-              <button className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300">
-                <Settings className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: AI Avatar and Question Panel */}
           <div className="space-y-8">
