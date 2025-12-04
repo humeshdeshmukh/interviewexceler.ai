@@ -17,36 +17,52 @@ const interviewTypes = [
 const AutoTypingText = () => {
     const [currentText, setCurrentText] = useState(interviewTypes[0]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
     const controls = useAnimation();
 
     useEffect(() => {
-        let isMounted = true;
+        setIsMounted(true);
+        return () => {
+            setIsMounted(false);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!isMounted) return;
+
+        let active = true;
         const animateText = async () => {
-            if (!isMounted) return;
+            if (!active || !isMounted) return;
+
             await controls.start({
                 opacity: 0,
                 y: -20,
                 transition: { duration: 0.3 }
             });
-            if (!isMounted) return;
+
+            if (!active || !isMounted) return;
             setCurrentText(interviewTypes[currentIndex]);
+
             await controls.start({
                 opacity: 1,
                 y: 0,
                 transition: { duration: 0.3 }
             });
-            if (!isMounted) return;
+
+            if (!active || !isMounted) return;
             setTimeout(() => {
-                if (isMounted) {
+                if (active && isMounted) {
                     setCurrentIndex((prev) => (prev + 1) % interviewTypes.length);
                 }
             }, 1500);
         };
+
         animateText();
+
         return () => {
-            isMounted = false;
+            active = false;
         };
-    }, [currentIndex, controls]);
+    }, [currentIndex, controls, isMounted]);
 
     return (
         <span className="relative inline-block min-w-[200px]">

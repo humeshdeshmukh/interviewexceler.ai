@@ -17,6 +17,7 @@ import { CheckCircle, Sparkles, MicOff } from 'lucide-react';
 import SetupModal from './components/SetupModal';
 import PersonalizedQuestionDisplay from './components/PersonalizedQuestionDisplay';
 import { supabaseService } from './services/supabaseService';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 export default function SimulationPage() {
   const [isRecording, setIsRecording] = useState(false);
@@ -84,6 +85,23 @@ export default function SimulationPage() {
   const [interviewPhase, setInterviewPhase] = useState<'intro' | 'technical' | 'behavioral'>('intro');
   const [isGeneratingQuestion, setIsGeneratingQuestion] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const { user } = useAuth();
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      supabaseService.getUserProfile(user.id).then(profile => {
+        if (profile) {
+          setUserProfile({
+            name: user.user_metadata?.full_name,
+            targetRole: profile.target_role,
+            experienceLevel: profile.experience_level,
+            resumeText: profile.preferences?.resume_text
+          });
+        }
+      });
+    }
+  }, [user]);
 
   // Ref to track AI speaking state without triggering re-renders in callbacks
   const isAISpeakingRef = React.useRef(false);
@@ -398,7 +416,8 @@ export default function SimulationPage() {
           geminiService.analyzeInterviewAnswer(
             questions[currentQuestion]?.text || '',
             transcript.final.trim(),
-            visualSummary
+            visualSummary,
+            userProfile
           ).then(async result => {
             console.log('✅ Gemini Analysis Result:', result);
             setGeminiAnalysis(result);

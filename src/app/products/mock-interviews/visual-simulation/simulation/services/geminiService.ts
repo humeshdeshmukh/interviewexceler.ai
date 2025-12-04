@@ -2,10 +2,36 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class GeminiService {
   private model: any;
+  private fallbackModel: any;
 
   constructor() {
     const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
     this.model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+    this.fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  }
+
+  private async retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries = 3,
+    baseDelay = 1000
+  ): Promise<T> {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await fn();
+      } catch (error: any) {
+        const isOverloaded = error?.message?.includes('503') || error?.message?.includes('overloaded');
+        const isLastRetry = i === maxRetries - 1;
+
+        if (!isOverloaded || isLastRetry) {
+          throw error;
+        }
+
+        const delay = baseDelay * Math.pow(2, i);
+        console.log(`Gemini API overloaded, retrying in ${delay}ms... (Attempt ${i + 1}/${maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    throw new Error('Max retries exceeded');
   }
 
   async analyzeInterviewAnswer(
@@ -15,6 +41,12 @@ export class GeminiService {
       averageFaceCount: number;
       postureIssues: string[];
       expressions: string[];
+    },
+    userProfile?: {
+      name?: string;
+      targetRole?: string;
+      resumeText?: string;
+      experienceLevel?: string;
     }
   ) {
     try {
@@ -30,7 +62,21 @@ Incorporate this visual data into your feedback. If there were posture issues or
 `;
       }
 
-      const prompt = `You are an expert interview coach. Analyze this interview response and provide detailed feedback.
+      let profileContext = "";
+      if (userProfile) {
+        profileContext = `
+Candidate Profile:
+- Name: ${userProfile.name || 'Candidate'}
+- Target Role: ${userProfile.targetRole || 'Not specified'}
+- Experience Level: ${userProfile.experienceLevel || 'Not specified'}
+- Resume Summary: ${userProfile.resumeText ? userProfile.resumeText.substring(0, 1000) + '...' : 'Not provided'}
+
+CRITICAL INSTRUCTION: Tailor your feedback and the model answer specifically for a ${userProfile.targetRole || 'professional'} role. Use the candidate's resume context to make the "improvedAnswer" sound authentic to their background. The "modelAnswer" should be a high-standard response expected for a ${userProfile.experienceLevel || 'professional'} level candidate.
+`;
+      }
+
+      const prompt = `You are an expert interview coach. Analyze this interview response and provide detailed, human-like feedback.
+${profileContext}
 ${visualContext}
 Question: "${question}"
 Answer: "${answer}"
@@ -39,9 +85,9 @@ CRITICAL: If the answer is empty, irrelevant, or contains only background noise/
 
 Respond in this exact JSON format (do not include any other text):
 {
-  "analysis": "A brief but specific analysis of the answer's strengths and areas for improvement. Include comments on body language if data is provided.",
-  "improvedAnswer": "A polished, professional version of the answer that maintains the candidate's key points while improving structure and clarity",
-  "modelAnswer": "A model answer that demonstrates the ideal way to respond to this question",
+  "analysis": "A detailed, constructive analysis of the answer. Address the candidate directly using 'you'. Be specific about what was good and what needs improvement based on their target role.",
+  "improvedAnswer": "A polished, professional version of the answer that maintains the candidate's key points but improves structure, clarity, and impact. It should sound natural and human.",
+  "modelAnswer": "An ideal, high-scoring answer to this question, tailored to the target role and experience level.",
   "score": <number between 0-100>,
   "keyImprovements": [
     "<specific improvement point 1>",
@@ -54,7 +100,20 @@ Respond in this exact JSON format (do not include any other text):
   "bodyLanguageScore": <number between 0-100>
 }`;
 
-      const result = await this.model.generateContent(prompt);
+      // Try with primary model with retry logic
+      let result;
+      try {
+        result = await this.retryWithBackoff(() => this.model.generateContent(prompt));
+      } catch (primaryError: any) {
+        // If primary model fails, try fallback model
+        console.log('Primary model failed, trying fallback model...');
+        try {
+          result = await this.retryWithBackoff(() => this.fallbackModel.generateContent(prompt), 2, 500);
+        } catch (fallbackError) {
+          throw new Error('Both primary and fallback models are unavailable. Please try again in a few moments.');
+        }
+      }
+
       const response = await result.response;
       const text = response.text();
 

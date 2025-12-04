@@ -346,6 +346,8 @@ export const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+
       </div>
       {/* End Floating Multi-Theme Selector */}
       <MaxWidthWrapper>
@@ -436,6 +438,19 @@ export const Header = () => {
                   </AnimatePresence>
                 </div>
               ))}
+
+              {/* Profile Link - Inline with other menus */}
+              {isAuthenticated && (
+                <div className="relative group" role="menuitem" tabIndex={0}>
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300"
+                  >
+                    <FaUserTie className="text-lg opacity-70 hover:opacity-100 hover:text-[#fcba28] transition-colors" />
+                    Profile
+                  </Link>
+                </div>
+              )}
             </ul>
           </div>
 
@@ -483,6 +498,16 @@ export const Header = () => {
               </DropdownMenu>
             </div>
 
+            {isAuthenticated && (
+              <Link
+                href="/profile"
+                className="p-2 rounded-full bg-background border border-border/20 flex items-center justify-center transition-all duration-300 hover:bg-[#fcba28]/20 focus:outline-none focus:ring-2 focus:ring-[#fcba28]"
+                aria-label="User Profile"
+              >
+                <FaUserTie className="w-4 h-4 text-[#fcba28]" />
+              </Link>
+            )}
+
             {loading ? (
               <UserButtonLoading />
             ) : isAuthenticated ? (
@@ -501,6 +526,7 @@ export const Header = () => {
           </div>
         </nav>
       </MaxWidthWrapper>
+
     </motion.header >
   );
 };

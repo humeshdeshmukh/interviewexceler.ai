@@ -48,5 +48,74 @@ export const supabaseService = {
         if (error) {
             console.error('Error saving score:', error);
         }
+    },
+
+    async getUserProfile(userId: string) {
+        const supabase = createClient();
+        try {
+            const { data, error } = await supabase
+                .from('interview_user_profiles')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+
+            if (error) {
+                // PGRST116 means no rows returned (user doesn't have a profile yet)
+                if (error.code === 'PGRST116') {
+                    console.log('No profile found for user, this is normal for first-time users');
+                    return null;
+                }
+                // Log the full error for debugging
+                console.error('Error fetching user profile:', {
+                    message: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint
+                });
+                return null;
+            }
+            return data;
+        } catch (err) {
+            console.error('Unexpected error fetching user profile:', err);
+            return null;
+        }
+    },
+
+    async updateUserProfile(userId: string, profileData: any) {
+        const supabase = createClient();
+
+        // Check if profile exists
+        const { data: existingProfile } = await supabase
+            .from('interview_user_profiles')
+            .select('id')
+            .eq('user_id', userId)
+            .single();
+
+        if (existingProfile) {
+            // Update
+            // @ts-ignore
+            const { error } = await supabase
+                .from('interview_user_profiles')
+                .update({
+                    ...profileData,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('user_id', userId);
+
+            if (error) throw error;
+        } else {
+            // Insert
+            // @ts-ignore
+            const { error } = await supabase
+                .from('interview_user_profiles')
+                .insert({
+                    user_id: userId,
+                    ...profileData,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+
+            if (error) throw error;
+        }
     }
 };
