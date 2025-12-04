@@ -47,6 +47,7 @@ import { UserButtonLoading } from '../features/auth/components/UserButtonLoading
 import { Switch } from './ui/switch';
 import { FaSun, FaMoon, FaPalette } from 'react-icons/fa';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
+import { ChevronDown, X, Sun, Moon, Monitor, BarChart3 } from 'lucide-react';
 
 const themeOptions = [
   {
@@ -351,111 +352,138 @@ export const Header = () => {
       </div>
       {/* End Floating Multi-Theme Selector */}
       <MaxWidthWrapper>
-        <nav className="flex items-center h-20 justify-between relative" role="navigation" ref={menuRef}>
+        <nav className="flex items-center h-20 justify-between relative gap-4" role="navigation" ref={menuRef}>
           {/* Logo with hover effect */}
           <motion.div
-            className="flex items-center md:mr-8 lg:mr-10 xl:mr-12"
+            className="flex items-center flex-shrink-0"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Logo className="flex-shrink-0" />
           </motion.div>
 
-          {/* Desktop Navigation Links - Centered */}
-          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <ul className="flex items-center gap-8 lg:gap-10 xl:gap-12" role="menubar">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center flex-1 justify-center">
+            <ul className="flex items-center gap-6 lg:gap-8 xl:gap-10" role="menubar">
               {navigationMenus.map((menu, idx) => (
                 <div
                   key={idx}
                   className="relative group"
-                  onMouseEnter={() => handleMenuHover(idx)}
-                  onMouseLeave={() => handleMenuHover(null)}
+                  onMouseEnter={() => !menu.isStandalone && handleMenuHover(idx)}
+                  onMouseLeave={() => !menu.isStandalone && handleMenuHover(null)}
                   role="menuitem"
                   onKeyDown={(e) => handleKeyDown(e)}
                   tabIndex={0}
                 >
-                  <motion.button
-                    className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300 group"
-                    aria-expanded={activeMenu === idx}
-                    aria-haspopup="true"
-                    aria-label={menu.title}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleMenuClick(idx)}
-                  >
-                    {menu.icon && (
-                      <menu.icon className="text-lg opacity-70 group-hover:opacity-100 group-hover:text-[#fcba28] transition-colors" />
-                    )}
-                    {menu.title}
-                  </motion.button>
-
-                  <AnimatePresence mode="wait">
-                    {activeMenu === idx && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 15, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                        className={cn(dropdownClasses, activeMenu === idx && 'active')}
-                        role="menu"
+                  {menu.isStandalone && menu.href ? (
+                    // Standalone link (like Dashboard)
+                    <Link
+                      href={menu.href}
+                      className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300 group"
+                    >
+                      {menu.icon && (
+                        <menu.icon className="text-lg opacity-70 group-hover:opacity-100 group-hover:text-[#fcba28] transition-colors" />
+                      )}
+                      {menu.title}
+                    </Link>
+                  ) : (
+                    // Dropdown menu
+                    <>
+                      <motion.button
+                        className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300 group"
+                        aria-expanded={activeMenu === idx}
+                        aria-haspopup="true"
+                        aria-label={menu.title}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleMenuClick(idx)}
                       >
-                        <div className="relative grid grid-cols-1 gap-1 px-2">
-                          {menu.links.map((link, linkIdx) => (
-                            <motion.div
-                              key={linkIdx}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: linkIdx * 0.05 }}
-                              className="group/item"
-                            >
-                              <Link
-                                href={link.href}
-                                onClick={() => handleMenuClickNavigate(link.href)}
-                                onKeyDown={(e) => handleKeyDown(e, link.href)}
-                                className={menuItemClasses}
-                                role="menuitem"
-                                tabIndex={0}
-                              >
-                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fcba28]/5 group-hover/item:bg-[#fcba28]/10 text-[#fcba28] transition-colors">
-                                  {link.icon && <link.icon className="h-5 w-5" />}
-                                </span>
-                                <div className="flex-1">
-                                  <div className="text-sm font-medium text-white group-hover/item:text-[#fcba28] transition-colors mb-1">
-                                    {link.label}
-                                  </div>
-                                  {link.description && (
-                                    <div className="text-xs text-muted-foreground group-hover/item:text-white/70 transition-colors line-clamp-2">
-                                      {link.description}
+                        {menu.icon && (
+                          <menu.icon className="text-lg opacity-70 group-hover:opacity-100 group-hover:text-[#fcba28] transition-colors" />
+                        )}
+                        {menu.title}
+                      </motion.button>
+
+                      <AnimatePresence mode="wait">
+                        {activeMenu === idx && menu.links && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                            transition={{ duration: 0.2, ease: 'easeOut' }}
+                            className={cn(dropdownClasses, activeMenu === idx && 'active')}
+                            role="menu"
+                          >
+                            <div className="relative grid grid-cols-1 gap-1 px-2">
+                              {menu.links.map((link, linkIdx) => (
+                                <motion.div
+                                  key={linkIdx}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: linkIdx * 0.05 }}
+                                  className="group/item"
+                                >
+                                  <Link
+                                    href={link.href}
+                                    onClick={() => handleMenuClickNavigate(link.href)}
+                                    onKeyDown={(e) => handleKeyDown(e, link.href)}
+                                    className={menuItemClasses}
+                                    role="menuitem"
+                                    tabIndex={0}
+                                  >
+                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fcba28]/5 group-hover/item:bg-[#fcba28]/10 text-[#fcba28] transition-colors">
+                                      {link.icon && <link.icon className="h-5 w-5" />}
+                                    </span>
+                                    <div className="flex-1">
+                                      <div className="text-sm font-medium text-white group-hover/item:text-[#fcba28] transition-colors mb-1">
+                                        {link.label}
+                                      </div>
+                                      {link.description && (
+                                        <div className="text-xs text-muted-foreground group-hover/item:text-white/70 transition-colors line-clamp-2">
+                                          {link.description}
+                                        </div>
+                                      )}
                                     </div>
-                                  )}
-                                </div>
-                              </Link>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                                  </Link>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
                 </div>
               ))}
 
-              {/* Profile Link - Inline with other menus */}
+              {/* Dashboard & Profile Links - Inline with other menus */}
               {isAuthenticated && (
-                <div className="relative group" role="menuitem" tabIndex={0}>
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300"
-                  >
-                    <FaUserTie className="text-lg opacity-70 hover:opacity-100 hover:text-[#fcba28] transition-colors" />
-                    Profile
-                  </Link>
-                </div>
+                <>
+                  <div className="relative group" role="menuitem" tabIndex={0}>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300"
+                    >
+                      <BarChart3 className="text-lg opacity-70 hover:opacity-100 hover:text-[#fcba28] transition-colors" />
+                      Dashboard
+                    </Link>
+                  </div>
+                  <div className="relative group" role="menuitem" tabIndex={0}>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 py-2 text-base text-muted-foreground hover:text-[#fcba28] font-medium transition-all duration-300"
+                    >
+                      <FaUserTie className="text-lg opacity-70 hover:opacity-100 hover:text-[#fcba28] transition-colors" />
+                      Profile
+                    </Link>
+                  </div>
+                </>
               )}
             </ul>
           </div>
 
           {/* Desktop Social Links & User Actions - Right Aligned */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 ml-auto">
+          <div className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto flex-shrink-0">
             {loading ? (
               <UserButtonLoading />
             ) : isAuthenticated ? (

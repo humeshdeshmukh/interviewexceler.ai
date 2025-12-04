@@ -3,7 +3,7 @@
 import { motion, useAnimation } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const interviewTypes = [
     'Technical',
@@ -18,43 +18,54 @@ const AutoTypingText = () => {
     const [currentText, setCurrentText] = useState(interviewTypes[0]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMounted, setIsMounted] = useState(false);
+    const isMountedRef = useRef(false);
     const controls = useAnimation();
 
     useEffect(() => {
+        isMountedRef.current = true;
         setIsMounted(true);
+        // Set initial animation state
+        controls.set({ opacity: 1, y: 0 });
         return () => {
+            isMountedRef.current = false;
             setIsMounted(false);
         };
-    }, []);
+    }, [controls]);
 
     useEffect(() => {
         if (!isMounted) return;
 
         let active = true;
         const animateText = async () => {
-            if (!active || !isMounted) return;
+            // Extra check using ref for async safety
+            if (!active || !isMountedRef.current) return;
 
-            await controls.start({
-                opacity: 0,
-                y: -20,
-                transition: { duration: 0.3 }
-            });
+            try {
+                await controls.start({
+                    opacity: 0,
+                    y: -20,
+                    transition: { duration: 0.3 }
+                });
 
-            if (!active || !isMounted) return;
-            setCurrentText(interviewTypes[currentIndex]);
+                if (!active || !isMountedRef.current) return;
+                setCurrentText(interviewTypes[currentIndex]);
 
-            await controls.start({
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.3 }
-            });
+                await controls.start({
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.3 }
+                });
 
-            if (!active || !isMounted) return;
-            setTimeout(() => {
-                if (active && isMounted) {
-                    setCurrentIndex((prev) => (prev + 1) % interviewTypes.length);
-                }
-            }, 1500);
+                if (!active || !isMountedRef.current) return;
+                setTimeout(() => {
+                    if (active && isMountedRef.current) {
+                        setCurrentIndex((prev) => (prev + 1) % interviewTypes.length);
+                    }
+                }, 1500);
+            } catch (error) {
+                // Silently handle animation errors during unmount
+                console.debug('Animation interrupted:', error);
+            }
         };
 
         animateText();

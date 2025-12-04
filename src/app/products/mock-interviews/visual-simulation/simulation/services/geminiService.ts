@@ -7,7 +7,7 @@ export class GeminiService {
   constructor() {
     const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
     this.model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-    this.fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    this.fallbackModel = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   }
 
   private async retryWithBackoff<T>(
@@ -174,7 +174,13 @@ Respond in this exact JSON format (do not include any other text):
 
   async generateContent(prompt: string) {
     try {
-      const result = await this.model.generateContent(prompt);
+      let result;
+      try {
+        result = await this.retryWithBackoff(() => this.model.generateContent(prompt));
+      } catch (primaryError: any) {
+        console.log('Primary model failed for generateContent, trying fallback...');
+        result = await this.retryWithBackoff(() => this.fallbackModel.generateContent(prompt), 2, 500);
+      }
       const response = await result.response;
       return response.text();
     } catch (error) {
@@ -205,7 +211,13 @@ Respond in this exact JSON format (do not include any other text):
         ]
       `;
 
-      const result = await this.model.generateContent(prompt);
+      let result;
+      try {
+        result = await this.retryWithBackoff(() => this.model.generateContent(prompt));
+      } catch (primaryError: any) {
+        console.log('Primary model failed for generatePersonalizedQuestions, trying fallback...');
+        result = await this.retryWithBackoff(() => this.fallbackModel.generateContent(prompt), 2, 500);
+      }
       const response = await result.response;
       const text = response.text();
 
@@ -295,7 +307,13 @@ Respond in this exact JSON format (do not include any other text):
         `;
       }
 
-      const result = await this.model.generateContent(prompt);
+      let result;
+      try {
+        result = await this.retryWithBackoff(() => this.model.generateContent(prompt));
+      } catch (primaryError: any) {
+        console.log('Primary model failed for generateNextQuestion, trying fallback...');
+        result = await this.retryWithBackoff(() => this.fallbackModel.generateContent(prompt), 2, 500);
+      }
       const response = await result.response;
       const text = response.text();
       const cleanText = text.replace(/^```json\n?|\n?```$/g, '').trim();

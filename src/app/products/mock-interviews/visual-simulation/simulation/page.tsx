@@ -117,6 +117,12 @@ export default function SimulationPage() {
     currentQuestionRef.current = currentQuestion;
   }, [currentQuestion]);
 
+  // Ref for isRecording to avoid stale closure in speech recognition
+  const isRecordingRef = React.useRef(false);
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+  }, [isRecording]);
+
   // Refs for accumulating visual metrics during recording
   const visualMetricsRef = React.useRef<{
     faceCounts: number[];
@@ -297,13 +303,43 @@ export default function SimulationPage() {
         };
 
         recognitionInstance.onerror = (event: any) => {
+          // "no-speech" is expected when user hasn't spoken within timeout - silently restart
+          if (event.error === 'no-speech') {
+            // Only restart if we're still recording
+            if (isRecordingRef.current) {
+              try {
+                recognitionInstance.stop();
+                setTimeout(() => {
+                  if (isRecordingRef.current) {
+                    recognitionInstance.start();
+                  }
+                }, 100);
+              } catch (e) {
+                // Ignore restart errors
+              }
+            }
+            return;
+          }
+
+          // "aborted" happens when we manually stop - ignore it
+          if (event.error === 'aborted') {
+            return;
+          }
+
+          // Log only genuine errors
           console.error('Speech recognition error:', event.error);
         };
 
         recognitionInstance.onend = () => {
           console.log('Speech recognition ended');
-          if (isRecording) {
-            recognitionInstance.start();
+          // Use ref to get current recording state (avoids stale closure)
+          if (isRecordingRef.current) {
+            console.log('Restarting speech recognition...');
+            try {
+              recognitionInstance.start();
+            } catch (e) {
+              console.error('Failed to restart recognition:', e);
+            }
           }
         };
 
@@ -340,6 +376,24 @@ export default function SimulationPage() {
   const handleToggleRecording = async () => {
     try {
       if (!isRecording) {
+        // Create session if not exists (for normal mode)
+        if (!sessionId && user && interviewMode === 'standard') {
+          try {
+            const session = await supabaseService.saveSession(
+              user.id,
+              '',
+              '',
+              'Standard Mock Interview'
+            );
+            if (session) {
+              setSessionId(session.id);
+              console.log('✅ Standard interview session created:', session.id);
+            }
+          } catch (error) {
+            console.error('Failed to create session:', error);
+          }
+        }
+
         // Start recording
         await recordingService.startRecording();
         setIsRecording(true);
@@ -362,7 +416,20 @@ export default function SimulationPage() {
 
         // Start speech recognition
         if (recognition) {
-          recognition.start();
+          try {
+            // First stop any existing recognition to avoid "already started" error
+            recognition.stop();
+          } catch (e) {
+            // Ignore errors from stopping (may not be running)
+          }
+          // Start after a brief delay to ensure stop has completed
+          setTimeout(() => {
+            try {
+              recognition.start();
+            } catch (e) {
+              console.error('Failed to start speech recognition:', e);
+            }
+          }, 100);
         }
 
         enhancedAnalysisService.clearHistory();
@@ -428,15 +495,44 @@ export default function SimulationPage() {
               analysisRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
 
-            // Save to Supabase if session exists
-            if (sessionId) {
-              await supabaseService.saveScore(
-                sessionId,
-                currentQuestion,
-                questions[currentQuestion]?.text || '',
-                transcript.final.trim(),
-                result
-              );
+            // Save to Supabase - create session if needed
+            if (user) {
+              let currentSessionId = sessionId;
+
+              // Create session if none exists (fallback)
+              if (!currentSessionId) {
+                try {
+                  const session = await supabaseService.saveSession(
+                    user.id,
+                    '',
+                    '',
+                    'Mock Interview'
+                  );
+                  if (session) {
+                    currentSessionId = session.id;
+                    setSessionId(session.id);
+                    console.log('✅ Fallback session created:', session.id);
+                  }
+                } catch (error) {
+                  console.error('Failed to create fallback session:', error);
+                }
+              }
+
+              // Save the score
+              if (currentSessionId) {
+                try {
+                  await supabaseService.saveScore(
+                    currentSessionId,
+                    currentQuestion,
+                    questions[currentQuestion]?.text || '',
+                    transcript.final.trim(),
+                    result
+                  );
+                  console.log('✅ Score saved for question', currentQuestion);
+                } catch (error) {
+                  console.error('Failed to save score:', error);
+                }
+              }
             }
           }).catch(error => {
             console.error('❌ Gemini analysis failed:', error);
@@ -618,15 +714,21 @@ export default function SimulationPage() {
     setIsGeneratingQuestion(true);
 
     try {
-      // Save session to Supabase (using placeholder userId for now)
+      // Save session to Supabase with authenticated user ID
+      if (!user) {
+        console.warn('No authenticated user found, session will not be saved');
+        throw new Error('Please log in to save your interview session');
+      }
+
       const session = await supabaseService.saveSession(
-        'user-' + Date.now(),
+        user.id, // Use actual authenticated user ID
         data.resumeText || '',
         data.jobDescription || '',
         data.goal
       );
       if (session) {
         setSessionId(session.id);
+        console.log('✅ Session saved with ID:', session.id, 'for user:', user.id);
       }
 
       // Generate initial question using Gemini
@@ -800,22 +902,24 @@ export default function SimulationPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       </div>
 
-      {/* Header
-      <header className="relative border-b border-white/10 backdrop-blur-sm">
+      {/* Header with Glassmorphism */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <button className="flex items-center text-white gap-2 hover:text-[#fcba28] transition-colors">
-              <ChevronLeft className="w-5 h-5" />
+            <button className="flex items-center text-white gap-2 hover:text-[#fcba28] transition-colors group">
+              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               Exit Interview
             </button>
-            <div className="flex items-center gap-4">
-              <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <Settings className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2">
+              <span className="text-white/60 text-sm hidden sm:block">{currentTime}</span>
+              <div className="w-px h-6 bg-white/10 hidden sm:block" />
+              <button className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300">
+                <Settings className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
               </button>
             </div>
           </div>
         </div>
-      </header> */}
+      </header>
 
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
