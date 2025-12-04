@@ -78,6 +78,9 @@ export function generateMetadata({
     robots: {
       index: !noIndex,
       follow: !noIndex,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
       googleBot: {
         index: !noIndex,
         follow: !noIndex,
