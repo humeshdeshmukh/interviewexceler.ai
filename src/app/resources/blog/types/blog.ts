@@ -10,10 +10,14 @@ export interface BlogPost {
   date: string;
   excerpt: string;
   link: string;
+  slug: string; // URL-friendly slug
   category: string;
   readTime: string;
   author: string;
   referralLinks: ReferralLink[];
+  content?: string; // Full article content in markdown
+  keywords?: string[]; // SEO keywords
+  image?: string; // Featured image
 }
 
 export interface BlogFilterState {

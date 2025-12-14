@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { blogPosts } from './resources/blog/data/posts'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://www.interviewexceler.com'
@@ -274,5 +275,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'yearly',
             priority: 0.3,
         },
+
+        // Individual Blog Posts - High value for SEO
+        ...blogPosts.map(post => ({
+            url: `${baseUrl}${post.link}`,
+            lastModified: new Date(post.date),
+            changeFrequency: 'monthly' as const,
+            priority: 0.7,
+        })),
     ]
 }
+

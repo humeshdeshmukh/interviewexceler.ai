@@ -12,6 +12,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthModal } from "@/features/auth/components/AuthModal";
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { ChatBot } from "@/components/ChatBot/ChatBot";
+import {
+  organizationSchema,
+  websiteSchema,
+  softwareApplicationSchema,
+  generateFAQSchema,
+  commonFAQs
+} from "@/lib/structuredData";
 
 const font = Noto_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
@@ -30,7 +37,12 @@ export const metadata = generateMetadata({
     "career coaching",
     "salary negotiation",
     "aptitude test",
-    "InterviewExceler.Ai"
+    "InterviewExceler.Ai",
+    "job interview practice",
+    "AI career coach",
+    "interview simulator",
+    "technical interview prep",
+    "behavioral interview questions"
   ],
   path: "/",
 });
@@ -44,6 +56,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="alternate" type="application/rss+xml" title="InterviewExceler Blog RSS" href="/rss.xml" />
       </head>
       <body
         className={cn(
@@ -64,24 +77,36 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
         </AuthProvider>
+        {/* Organization Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "InterviewExceler.Ai",
-              "url": "https://www.interviewexceler.com",
-              "logo": "https://www.interviewexceler.com/logo.svg",
-              "sameAs": [
-                "https://twitter.com/interviewexceler",
-                "https://www.linkedin.com/company/interviewexceler"
-              ],
-              "description": "Elevate your career with InterviewExceler.Ai. Practice with AI-driven mock interviews, get personalized feedback, and land your dream job."
-            })
+            __html: JSON.stringify(organizationSchema)
+          }}
+        />
+        {/* WebSite Schema with Search Action */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema)
+          }}
+        />
+        {/* Software Application Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareApplicationSchema)
+          }}
+        />
+        {/* FAQ Schema for common questions */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateFAQSchema(commonFAQs))
           }}
         />
       </body>
     </html>
   );
 }
+
