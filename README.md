@@ -1,135 +1,80 @@
-# Setup Guide
+# Interview Exceler AI
 
-Hi humesh deshmukh👋
+Welcome to **Interview Exceler AI**! 🚀
 
-In this guide, I will walk you through the process of setting up your Premium Kit, including installation, Convex backend configuration, authentication, and Stripe integration.
+An AI-powered interview preparation platform designed to help candidates master their interview skills with real-time feedback, mock interviews, and personalized coaching.
 
-You can also find this in the [website documentation](https://www.devvault.dev/docs).
+## ✨ Features
 
-## Table of Contents
-- [Installation Guide](https://www.devvault.dev/docs/installation)
-- [Convex Setup](https://www.devvault.dev/docs/getting-started/convex-setup)
-- [Authentication Setup](https://www.devvault.dev/docs/getting-started/authentication-setup)
-- [Stripe Setup](https://www.devvault.dev/docs/getting-started/stripe-setup)
+- **AI Mock Interviews**: Practice with realistic, AI-driven interview scenarios.
+- **Real-time Feedback**: Get instant analysis on your answers, tone, and confidence.
+- **Interview History**: Track your progress and review past sessions.
+- **Customizable Tracks**: Choose from various industries and job roles.
+- **Premium Features**: Integrated with Stripe for seamless subscription management.
 
-## Installation Guide
+## 🛠️ Tech Stack
 
-After purchasing the kit, you'll receive an email with instructions to clone the repository. Follow these steps to get started:
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Backend / Database**: [Supabase](https://supabase.com/)
+- **AI Engine**: [Google Gemini AI](https://ai.google.dev/)
+- **Authentication**: Supabase Auth
+- **Payments**: [Stripe](https://stripe.com/)
+- **UI Components**: Radix UI, Lucide React, Framer Motion
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-
-# Navigate to the project directory
-cd <project-folder>
-
-# Remove the original remote
-git remote remove origin
-
-# Create and configure your own repository
-# Add your new remote origin
-
-# Install dependencies
-npm i
-
-# Set up environment variables
-mv .env.example .env.local
+git clone <your-repository-url>
+cd interviewexceler.ai_next.js-devops-master
 ```
 
-## Convex Setup
+### 2. Install Dependencies
 
-Learn how to set up your backend server using Convex.
+```bash
+npm install
+# or
+bun install
+```
 
-**Important**: Complete the installation process before proceeding.
+### 3. Environment Variables
 
-1. Navigate to the project directory and run:
-   ```bash
-   npx convex dev
-   ```
+Create a `.env.local` file in the root directory and add the following variables:
 
-2. When prompted, select:
-   - Option 1: "Create A New Project"
-   - Enter your app name
+```env
+# Gemini AI API Key
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+GEMINI_API_KEY=your_gemini_api_key
 
-That's it! Your backend is now deployed.
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
-## Authentication Setup
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-### Setting up Convex Auth
+# Admin / Email Settings
+ADMIN_EMAIL=your_admin_email
+EMAIL_PASS=your_email_app_password
+```
 
-1. Install required dependencies:
-   ```bash
-   npm install @convex-dev/auth @auth/core@0.36.0
-   ```
+### 4. Supabase Setup
 
-2. Run the initial setup:
-   ```bash
-   npx @convex-dev/auth
-   ```
-   When prompted about the URL of the local web server, simply press Enter.
+1. Create a new project on [Supabase Dashboard](https://supabase.com/dashboard).
+2. Run the provided SQL migrations found in the `/supabase` or root directory to set up your tables (e.g., `interview_profiles_migration.sql`).
+3. Configure your Auth settings in Supabase (Google OAuth, etc.).
 
-### Configuring Google OAuth
+### 5. Run the Development Server
 
-1. Visit the [Google Cloud Console](https://console.cloud.google.com/)
+```bash
+npm run dev
+```
 
-2. **OAuth Consent Screen Setup**:
-   - Enter your app name
-   - Add your email in "User support email"
-   - (Optional) Add your logo
-   - Under "Authorized Domains", add: `https://name-name-123.convex.site`
-   - Add your email in "Developer contact information"
-   - Complete the setup by clicking "Save and Continue"
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-3. **Credentials Setup**:
-   - Click "Create Credentials" → "OAuth client ID"
-   - Select "Web application"
-   - Configure the following:
-     - Authorized JavaScript Origins: `http://localhost:3000`
-     - Authorized Redirect URLs: `https://name-name-123.convex.site/api/auth/callback/google`
-   - Click "Create"
+## 📄 Documentation
 
-4. **Configure Convex Environment**:
-   - In your Convex project settings:
-     - Add `AUTH_GOOGLE_ID` environment variable with your Google Client ID
-     - Add `AUTH_GOOGLE_SECRET` environment variable with your Google Client Secret
-
-## Stripe Setup
-
-1. **Configure Stripe Secret Key**:
-   - Create an account on [Stripe Dashboard](https://dashboard.stripe.com)
-   - Navigate to Developers → API Keys
-   - Copy the Secret key
-   - Add to Convex Environment Variables as `STRIPE_API_KEY`
-
-2. **Configure Publishable Key**:
-   - Copy the Publishable key from Stripe dashboard
-   - Add to Convex Environment Variables as `STRIPE_KEY`
-
-3. **Set up Webhooks**:
-   - Run in your terminal:
-     ```bash
-     npm run stripe:listen
-     ```
-   - Copy the webhook signing secret (`whsec_81...`)
-   - Add to Convex Environment Variables as `STRIPE_WEBHOOKS_SECRET`
-
-4. **Enable Stripe Functions**:
-   - Uncomment the functions in the `/convex` folder:
-     - `payments`
-     - `stripe`
-     - `users`
-
----
-
-For more detailed information about how to use the tools we just installed, visit the [official documentation](https://www.devvault.dev/docs).# devvault-kit
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
-
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
-
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
-
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
-
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
-
-#  i n t e r v i e w m a s t e r . a i - d e v o p s
+For detailed instructions on how to use the platform, please refer to [HOW_TO_USE.md](./HOW_TO_USE.md).
