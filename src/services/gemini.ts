@@ -33,7 +33,7 @@ interface InterviewQuestion {
 }
 
 class GeminiService {
-  private model = genAI?.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  private model = genAI?.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
   private async withRetry<T>(fn: () => Promise<T>, retries = MAX_RETRIES): Promise<T> {
     await geminiRateLimiter(); // Apply rate limiting
