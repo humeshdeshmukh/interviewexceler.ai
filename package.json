@@ -17,7 +17,6 @@
     "@mediapipe/tasks-vision": "^0.10.22-rc.20250304",
     "@monaco-editor/react": "^4.7.0",
     "@next/bundle-analyzer": "^15.3.5",
-    "@next/swc-win32-x64-msvc": "^15.4.4",
     "@next/third-parties": "^15.3.5",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
