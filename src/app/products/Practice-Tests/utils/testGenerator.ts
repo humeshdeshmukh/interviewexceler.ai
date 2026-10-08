@@ -34,7 +34,7 @@ const questionTemplates: { [key: string]: QuestionTemplate } = {
   'system-design': {
     templates: [
       'How would you handle %s in a distributed system?',
-      'What's the best way to scale %s?',
+      "What's the best way to scale %s?",
       'How would you ensure reliability of %s?',
       'Which database would you choose for %s?',
       'How would you optimize %s for high traffic?'
@@ -58,7 +58,7 @@ const questionTemplates: { [key: string]: QuestionTemplate } = {
     templates: [
       'What is the best practice for %s in modern web development?',
       'How would you implement %s in a web application?',
-      'What's the most efficient way to handle %s?',
+      "What's the most efficient way to handle %s?",
       'Which framework would you choose for %s?',
       'How would you optimize %s in a web app?'
     ],
@@ -80,9 +80,9 @@ const questionTemplates: { [key: string]: QuestionTemplate } = {
   'leadership': {
     templates: [
       'How would you handle %s in a team setting?',
-      'What's the best approach to %s?',
+      "What's the best approach to %s?",
       'How would you motivate a team member who %s?',
-      'What's your strategy for %s?',
+      "What's your strategy for %s?",
       'How would you address %s?'
     ],
     options: [

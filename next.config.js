@@ -126,5 +126,6 @@ module.exports = {
     STRIPE_URL_ENDPOINT: process.env.STRIPE_URL_ENDPOINT,
     GA_ID: process.env.GA_ID,
     MC_ID: process.env.MC_ID,
+    HOSTING_URL: process.env.HOSTING_URL,
   },
 };

@@ -140,7 +140,7 @@ export default function SalaryNegotiation() {
       setState(prev => ({
         ...prev,
         isAnalyzing: false,
-        error: 'Failed to analyze data. Please try again."
+        error: 'Failed to analyze data. Please try again.'
       }));
     }
   };
