@@ -19,7 +19,7 @@ export const RightHero = () => {
                         }}
                     >
                         <Image
-                            src="/ChatGPT Image Jul 14, 2025, 07_00_22 PM.png"
+                            src="/hero-student.png"
                             alt="Student practicing interview"
                             fill
                             style={{ objectFit: 'cover', borderRadius: '2rem' }}

@@ -55,23 +55,7 @@ module.exports = {
 
   // Setup redirects
   async redirects() {
-    return [
-      {
-        source: '/old-route',   // Old URL
-        destination: '/new-route',  // New URL
-        permanent: true,  // Permanent redirect
-      },
-      {
-        source: '/another-old-route',   // Old URL
-        destination: '/another-new-route',  // New URL
-        permanent: true,  // Permanent redirect
-      },
-      {
-        source: '/old-route',   // Old URL
-        destination: '/new-route',  // New URL
-        permanent: true,  // Permanent redirect
-      },
-    ];
+    return [];
   },
 
   // Add new turbopack config at the root
